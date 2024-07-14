@@ -1,33 +1,69 @@
 // import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { api } from '../features/Auth/authApi';
+import { setUser } from '../features/slices/authSlice';
+import { toast } from 'react-toastify';
+
+type Inputs = {
+  email: string,
+  password: string
+};
 
 const Login = () => {
-//   const loginAsGuestUser = () => {
-//     // Function to handle guest user login
-//     console.log('Logging in as guest user...');
-//   };
+
+  const navigate = useNavigate()
+
+  const dispatch = useDispatch()
+  const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
+
+  const [createUser, { isLoading }] = api.useLoginMutation()
+
+  const onSubmit = async (data: Inputs) => {
+    try {
+      const response = await createUser(data).unwrap();
+      dispatch(setUser(response))
+      toast.success('login successful')
+      navigate('/userdash')
+      console.log("API response:", response);
+      
+      if (response && response.msg && Array.isArray(response.msg) && response.msg.length > 0) {
+        toast.success(`login successful `);
+      } 
+    } catch (error) {
+      console.error("Error during login:", error);
+      toast.error('Login failed. Please try again.');
+    }
+  };
+  
 
   return (
     <section className='h-screen flex justify-center items-center bg-base-200'>
       <form
-        method='post'
+        onSubmit={handleSubmit(onSubmit)}
         className='card p-8 bg-base-100 shadow-lg w-96 flex flex-col gap-4 rounded-lg'
       >
-        <h4 className='text-center text-3xl font-bold'>Login</h4>
+        <h4 className='text-center text-3xl font-bold'>{isLoading ? "loading" : "Register"}</h4>
+        
         <input
+          {...register("email", { required: true })}
           type='email'
           placeholder='Email'
-          name='identifier'
           className='input input-bordered'
         />
+        {errors.email && <span>This field is required</span>}
+        
         <input
+          {...register("password", { required: true })}
           type='password'
           placeholder='Password'
-          name='password'
           className='input input-bordered'
         />
+        {errors.password && <span>This field is required</span>}
+        
         <div className='mt-4'>
-          <button className='btn btn-primary w-full'>Login</button>
+          <button type='submit' className='btn btn-primary w-full'>Login</button>
         </div>
         
         <p className='text-center'>

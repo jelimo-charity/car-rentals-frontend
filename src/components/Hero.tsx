@@ -1,13 +1,13 @@
 // import React from 'react'
-
+import carhome from '../assets/carhome1.jpg'
 const Hero = () => {
   return (
     <>
       <div className="hero bg-base-200 min-h-screen">
     <div className="hero-content flex-col lg:flex-row-reverse mr-30">
       <img
-        src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.jpg"
-        className="max-w-sm rounded-lg shadow-2xl" />
+        src={carhome}
+        className="max-w-md h-50 mt-30 rounded-sm shadow-2xl" />
       <div
       className="mr-10">
         <h1 className="text-5xl font-bold">We are changing <br />the way people <br />shop!</h1>
