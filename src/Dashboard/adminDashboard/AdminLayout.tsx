@@ -19,7 +19,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
       variant="permanent"
       anchor="left"
       className="w-64"
-      classes={{ paper: 'w-64 bg-gradient-to-r from-[#0A0A3E] via-[#1a1a66] to-[#2a2a99] text-white' }}
+      classes={{ paper: 'w-64 bg-gradient-to-r from-[#0D1B2A] via-[#1b263b] to-[#415a77] text-white' }}
     >
       <List>
         <ListItem button component={Link} to="/admindash" className="hover:bg-blue-700 text-white font-bold">

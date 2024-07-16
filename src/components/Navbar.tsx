@@ -3,17 +3,15 @@ import { Link } from 'react-router-dom'
 const Navbar = () => {
   return (
     <>
- <div className="navbar  bg-base-100 flex justify-between">
+ <div className="navbar  bg-customBlueDarkest flex justify-between">
   <div className="flex-1 ml-16">
-    <a className="btn btn-ghost text-xl">FashioNest</a>
+    <a className="btn btn-ghost text-xl">Speedy Cars</a>
   </div>
   <div>
-  <ul tabIndex={0} className="flex flex-row bg-base-100 mr-10 rounded-box z-[1]  p-2 shadow">
+  <ul tabIndex={0} className="flex flex-row bg-customBlueDarkest mr-10 rounded-box z-[1]  p-2 shadow">
     <li className="mr-2"><Link to="/">Home</Link></li>
     <li className="mr-2"><Link to="about">About</Link></li>
     <li className="mr-2"><Link to="cars">Cars</Link></li>
-
-    
 
 </ul>
 </div>

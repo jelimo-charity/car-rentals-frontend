@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export interface TVehicle {
+  id: number;
   rental_price: number;
   availability: boolean;
   manufacturer: string;
@@ -16,7 +17,20 @@ export interface TVehicle {
 
 export const vehiclesApi = createApi({
   reducerPath: 'vehiclesApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'http://localhost:8000',
+    prepareHeaders: (headers) => {
+      headers.set('Content-Type', 'application/json');
+      return headers;
+    },
+    responseHandler: (response) => {
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        return response.json();
+      }
+      return response.text();
+    }
+  }),
   endpoints: (builder) => ({
     createVehicle: builder.mutation<TVehicle, Partial<TVehicle>>({
       query: (vehicle) => ({
@@ -44,3 +58,4 @@ export const vehiclesApi = createApi({
   }),
 });
 
+// export const { useGetVehiclesQuery, useDeleteVehicleMutation, useCreateVehicleMutation, useUpdateVehicleMutation } = vehiclesApi;

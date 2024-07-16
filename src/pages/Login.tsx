@@ -39,10 +39,10 @@ const Login = () => {
   
 
   return (
-    <section className='h-screen flex justify-center items-center bg-base-200'>
+    <section className='h-screen flex justify-center items-center bg-customBlue'>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className='card p-8 bg-base-100 shadow-lg w-96 flex flex-col gap-4 rounded-lg'
+        className='card p-8 bg-customBlueDarker shadow-lg w-96 flex flex-col gap-4 rounded-lg'
       >
         <h4 className='text-center text-3xl font-bold'>{isLoading ? "loading" : "Register"}</h4>
         
@@ -50,7 +50,7 @@ const Login = () => {
           {...register("email", { required: true })}
           type='email'
           placeholder='Email'
-          className='input input-bordered'
+          className='input input-bordered bg-customLight'
         />
         {errors.email && <span>This field is required</span>}
         
@@ -58,7 +58,7 @@ const Login = () => {
           {...register("password", { required: true })}
           type='password'
           placeholder='Password'
-          className='input input-bordered'
+          className='input input-bordered bg-customLight'
         />
         {errors.password && <span>This field is required</span>}
         

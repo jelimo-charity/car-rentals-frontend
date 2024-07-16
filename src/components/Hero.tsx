@@ -3,7 +3,7 @@ import carhome from '../assets/carhome1.jpg'
 const Hero = () => {
   return (
     <>
-      <div className="hero bg-base-200 min-h-screen">
+      <div className="hero bg-customBlueDarker min-h-screen">
     <div className="hero-content flex-col lg:flex-row-reverse mr-30">
       <img
         src={carhome}

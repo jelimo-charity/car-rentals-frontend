@@ -7,7 +7,15 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        customBlueDarkest: "#0D1B2A",
+        customBlueDarker: '#1B263B',  
+        customBlue: '#415A77',
+        customBlueLight: '#E0E1DD',
+        customLight: '#EFF6E0',
+      },
+    },
   },
   plugins: [
     daisyui
