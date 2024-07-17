@@ -8,12 +8,12 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 import './App.css'
-import UserDash from './Dashboard/userDashboard/UserDash'
 import AdminLayout from './Dashboard/adminDashboard/AdminLayout'
 import AdminDashboard from './Dashboard/adminDashboard/AdminOverview'
 import Vehicles from './Dashboard/adminDashboard/Vehicles/Vehicles'
-import Users from './Dashboard/adminDashboard/Users'
 import Report from './Dashboard/adminDashboard/Report'
+import UsersComponent from './Dashboard/adminDashboard/Users/Users'
+import Cars from './Dashboard/userDashboard/Cars/Cars'
 
 function App() {
   const router = createBrowserRouter([{
@@ -40,7 +40,7 @@ function App() {
  
   {
     path: "/userdash",
-    element: <UserDash />,
+    element: <Cars />,
     errorElement: <Error />,
   },
   {
@@ -58,7 +58,7 @@ function App() {
       },
       {
         path: "manage-users",
-        element: <Users />
+        element: <UsersComponent />
       },
       {
         path: "reports",

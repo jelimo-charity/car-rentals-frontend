@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Typography, Card, CardContent, TextField, Button } from '@mui/material';
+import { Typography, Card, CardContent, TextField, Button, CircularProgress } from '@mui/material';
 import { vehiclesApi } from '../../../features/Vehicles/VehicleApi';
 import axios from 'axios';
+import { TVehicle } from '../../../Types/types';
+import { toast } from 'react-toastify';
 
 interface FormDataState {
   rental_price: number;
@@ -28,8 +30,10 @@ const CarForm: React.FC = () => {
     features: '',
   });
 
-  const [createVehicle, { isLoading, isError, isSuccess }] = vehiclesApi.useCreateVehicleMutation();
- 
+  const [createVehicle, { isLoading: isCreating, isError: isCreateError, isSuccess: isCreateSuccess }] = vehiclesApi.useAddVehicleMutation();
+  const { data: vehicles, error, isLoading: isFetching, refetch } = vehiclesApi.useGetVehiclesQuery();
+  const [deleteVehicle] = vehiclesApi.useDeleteVehicleMutation();
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type, files } = e.target as HTMLInputElement;
@@ -41,6 +45,16 @@ const CarForm: React.FC = () => {
       setFormData({ ...formData, [name]: value });
     }
   };
+  const handleDelete = async (user_id: number) => {
+    try {
+      await deleteVehicle(user_id).unwrap();
+      refetch();
+      toast.success('Vehicle deleted successfully');
+    } catch (error) {
+      console.error("Failed to delete vehicle:", error);
+      toast.error('Failed to delete vehicle');
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,7 +64,7 @@ const CarForm: React.FC = () => {
       if (formData.image) {
         const formDataImage = new FormData();
         formDataImage.append('file', formData.image);
-        formDataImage.append('upload_preset', 'carent'); // Add your upload preset here
+        formDataImage.append('upload_preset', 'carent'); // the upload preset 
 
         const response = await axios.post(
           'https://api.cloudinary.com/v1_1/dg9mim6xj/image/upload',
@@ -91,6 +105,13 @@ const CarForm: React.FC = () => {
     }
   };
 
+ 
+  const handleEdit = (vehicle: TVehicle) => {
+    // Implement edit logic here
+    // For example:
+    // console.log('Editing vehicle:', vehicle);
+    console.log(`Editing vehicle: ${vehicle.manufacturer} ${vehicle.model}`);
+  };
 
   return (
     <div className="p-4">
@@ -106,6 +127,15 @@ const CarForm: React.FC = () => {
               fullWidth
               name="manufacturer"
               value={formData.manufacturer}
+              onChange={handleChange}
+            />
+            <TextField
+              label="availability"
+              variant="outlined"
+              className='text-customBlueDarker'
+              fullWidth
+              name="model"
+              value={formData.availability}
               onChange={handleChange}
             />
             <TextField
@@ -156,7 +186,7 @@ const CarForm: React.FC = () => {
               onChange={handleChange}
             />
             <TextField
-              label="Rental Rate"
+              label="Rental price"
               variant="outlined"
               className='text-customBlueDarker'
               fullWidth
@@ -166,31 +196,51 @@ const CarForm: React.FC = () => {
               onChange={(e) => setFormData({ ...formData, rental_price: parseInt(e.target.value) })}
             />
             <TextField
-              label="Availability"
-              variant="outlined"
-              className='text-customBlueDarker'
-              fullWidth
-              name="availability"
-              value={formData.availability}
-              onChange={handleChange}
-            />
-            <TextField
               variant="outlined"
               className='text-customBlueDarker'
               fullWidth
               name="image"
               type="file"
-              // accept="image/*"
               onChange={handleChange}
             />
-            <Button type="submit" variant="contained" className="sm:col-span-2" disabled={isLoading}>
-              {isLoading ? 'Adding...' : 'Add Vehicle'}
+            <Button type="submit" variant="contained" className="sm:col-span-2" disabled={isCreating}>
+              {isCreating ? 'Adding...' : 'Add Vehicle'}
             </Button>
-            {isError && <Typography color="error">Error adding vehicle</Typography>}
-            {isSuccess && <Typography color="primary">Vehicle added successfully</Typography>}
+            {isCreateError && <Typography color="error">Error adding vehicle</Typography>}
+            {isCreateSuccess && <Typography color="primary">Vehicle added successfully</Typography>}
           </form>
         </CardContent>
       </Card>
+
+      {isFetching ? (
+        <CircularProgress />
+      ) : error ? (
+        <Typography color="error">Error fetching vehicles</Typography>
+      ) : (
+        <div>
+          <Typography variant="h5" className='text-customBlueDarker' gutterBottom>Existing Vehicles</Typography>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {vehicles?.map((vehicle: TVehicle) => (
+              <Card key={vehicle.id}>
+                <CardContent>
+                  <Typography variant="h6">{vehicle.manufacturer} {vehicle.model}</Typography>
+                  <Typography>Year: {vehicle.year}</Typography>
+                  <Typography>Fuel Type: {vehicle.fuel_type}</Typography>
+                  <Typography>Seating Capacity: {vehicle.seating_capacity}</Typography>
+                  <Typography>Features: {vehicle.features}</Typography>
+                  <Typography>Rental Rate: ${vehicle.rental_price}</Typography>
+                  <Typography>Availability: {vehicle.availability }</Typography>
+                  <img src={vehicle.image_url} alt={`${vehicle.manufacturer} ${vehicle.model}`} style={{ width: '100%', height: 'auto', marginBottom: '10px' }} />
+                  <div style={{ marginTop: '10px' }}>
+                    <Button variant="contained" color="primary" onClick={() => handleEdit(vehicle)} style={{ marginRight: '10px' }}>Edit</Button>
+                    <Button variant="contained" color="secondary" onClick={() => handleDelete(vehicle.id)}>Delete</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
