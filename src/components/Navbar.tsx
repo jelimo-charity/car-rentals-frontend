@@ -16,7 +16,7 @@ const Navbar = () => {
 </ul>
 </div>
   <div className="flex-none">
-    <div className="dropdown dropdown-end">
+    {/* <div className="dropdown dropdown-end">
       <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
         <div className="indicator">
           <svg
@@ -45,16 +45,16 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-    </div>
-    <div className="dropdown dropdown-end mr-10">
-      <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+    </div> */}
+    {/* <div className="dropdown dropdown-end mr-10"> */}
+      {/* <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
         <div className="w-10 rounded-full ">
           <img
             alt="Tailwind CSS Navbar component"
             src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
         </div>
-      </div>
-      <ul 
+      </div> */}
+      {/* <ul 
         tabIndex={0}
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
         <li>
@@ -65,9 +65,9 @@ const Navbar = () => {
         </li>
         <li><a>Settings</a></li>
         <li><a>Logout</a></li>
-      </ul>
+      </ul> */}
     
-    </div>
+    {/* </div> */}
     <ul>
     <li className="mr-2"><Link to="register">Create account</Link></li>
     <li className="mr-2"><Link to="login">Sign in</Link></li>

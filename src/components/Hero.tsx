@@ -1,22 +1,30 @@
 // import React from 'react'
-import carhome from '../assets/carhome1.jpg'
+import carhome from '../assets/carhome1r.png'
+// import carhome2 from '../assets/carhome2r.png'
+
 const Hero = () => {
   return (
     <>
-      <div className="hero bg-customBlueDarker min-h-screen">
-    <div className="hero-content flex-col lg:flex-row-reverse mr-30">
+ <div className=" bg-customBlueDarker ">
+    <div className=" flex-col lg:flex-col ">
+      <div className='flex flex-row '>
       <img
         src={carhome}
-        className="max-w-md h-50 mt-30 rounded-sm shadow-2xl" />
+        className="max-w-sm h-25 ml-20 rounded-sm " />
+          <img
+        src={carhome}
+        className="max-w-sm h-25 ml-30  rounded-sm " />
+         <img
+        src={carhome}
+        className="max-w-sm h-25 ml-30  rounded-sm " />
+      </div>
       <div
-      className="mr-10">
-        <h1 className="text-5xl font-bold">We are changing <br />the way people <br />shop!</h1>
+      className="flex flex-col  justify-items-center items-center mt-0">
+        <h1 className="text-5xl font-bold">We are changing the way people ride!</h1>
         <p className="py-6">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. <br />Ullam cupiditate labore adipisci temporibus, 
-          consequatur dolorum cum animi tempora, <br />non ipsam aliquam fuga! Dolore facere laudantium 
-          ipsum quibusdam at sit perferendis?
+        Welcome to Speedy Car Rentals.Your Journey begins Here!
         </p>
-        <button className="btn btn-primary">Products</button>
+        <button className="btn btn-primary mb-10 w-200">Our rental cars</button>
       </div>
     </div>
   </div>

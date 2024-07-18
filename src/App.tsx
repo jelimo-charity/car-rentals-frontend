@@ -14,6 +14,10 @@ import Vehicles from './Dashboard/adminDashboard/Vehicles/Vehicles'
 import Report from './Dashboard/adminDashboard/Report'
 import UsersComponent from './Dashboard/adminDashboard/Users/Users'
 import Cars from './Dashboard/userDashboard/Cars/Cars'
+import UserLayout from './Dashboard/userDashboard/UserLayout'
+import Profile from './Dashboard/userDashboard/Profile/Profile'
+import Booking from './Dashboard/userDashboard/Booking/Booking'
+import Cart from './Dashboard/userDashboard/Cart/Cart'
 
 function App() {
   const router = createBrowserRouter([{
@@ -37,11 +41,34 @@ function App() {
     element: <Login />,
     errorElement: <Error />,
   },
+  {
+    path: "/cars",
+    element: <Cars />,
+    errorElement: <Error />,
+  },
  
   {
     path: "/userdash",
-    element: <Cars />,
+    element: <UserLayout />,
     errorElement: <Error />,
+    children: [
+      {
+        path: "",
+        element: <Cars />
+      },
+      {
+        path: "profile",
+        element: <Profile />
+      },
+      {
+        path: "booking",
+        element: <Booking />
+      },
+      {
+        path: "cart",
+        element: <Cart />
+      }
+    ]
   },
   {
     path: "/admindash",
