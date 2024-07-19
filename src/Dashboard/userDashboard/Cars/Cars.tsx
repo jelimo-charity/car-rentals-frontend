@@ -3,9 +3,12 @@ import { CircularProgress, Typography, TextField, Button } from '@mui/material';
 import { vehiclesApi } from '../../../features/Vehicles/VehicleApi';
 import { TVehicle } from '../../../Types/types';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../../features/Cart/cartSlice';
 
 const Cars: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filters, setFilters] = useState({
     manufacturer: '',
@@ -17,7 +20,8 @@ const Cars: React.FC = () => {
   });
 
   const { data: vehicles, error, isLoading: isFetching } = vehiclesApi.useGetVehiclesQuery();
-
+  console.log(vehicles);
+  
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -26,9 +30,12 @@ const Cars: React.FC = () => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
   };
-  const handleRentNow = () => {
-    navigate('/login')
-  }
+
+  const handleRentNow = (vehicle: TVehicle) => {
+    dispatch(addToCart(vehicle));
+    navigate('/userdash/cart');
+  };
+
   const handleReset = () => {
     setSearchTerm('');
     setFilters({
@@ -52,22 +59,21 @@ const Cars: React.FC = () => {
 
   return (
     <div className="p-4 bg-customBlueDarkest">
-      <Typography variant="h4" className="text-customBlue flex justify-center items-center " gutterBottom>
+      <Typography variant="h4" className="text-customBlue flex justify-center items-center" gutterBottom>
         Explore our Speedy Cars
       </Typography>
      
       <div className="mb-10 p-4 bg-customBlueDark rounded-lg mx-auto max-w-4xl">
         <div className="flex flex-wrap gap-4 justify-center">
-        <TextField
-        label="Search"
-        variant="outlined"
-        fullWidth
-        value={searchTerm}
-        onChange={handleSearchChange}
-        className="bg-customBlueLight rounded  "
-        style={{ flex: '1 1 200px' }}
-      />
-
+          <TextField
+            label="Search"
+            variant="outlined"
+            fullWidth
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="bg-customBlueLight rounded"
+            style={{ flex: '1 1 200px' }}
+          />
           <TextField
             label="Manufacturer"
             variant="outlined"
@@ -101,7 +107,7 @@ const Cars: React.FC = () => {
             name="fuel_type"
             value={filters.fuel_type}
             onChange={handleFilterChange}
-            className="bg-customBlueLight"
+            className="bg-customBlueLight rounded"
             style={{ flex: '1 1 200px' }}
           />
           <TextField
@@ -124,8 +130,8 @@ const Cars: React.FC = () => {
           />
         </div>
         <div className="flex justify-center mt-4">
-          <Button variant="contained" className='bg-customBlueDarker' onClick={handleReset}>
-            Reset 
+          <Button variant="contained" className="bg-customBlueDarker" onClick={handleReset}>
+            Reset
           </Button>
         </div>
       </div>
@@ -135,10 +141,10 @@ const Cars: React.FC = () => {
       ) : error ? (
         <Typography color="error">Error fetching vehicles</Typography>
       ) : (
-        <div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredVehicles?.map((vehicle: TVehicle) => (
-              <div key={vehicle.id} className="card card-compact bg-customBlueDarker shadow-xl w-80">
+              <div key={vehicle.id} className="card card-compact bg-customBlueDarker shadow-xl w-full mb-6">
                 <figure className="h-40 overflow-hidden">
                   <img
                     src={vehicle.image_url}
@@ -155,7 +161,7 @@ const Cars: React.FC = () => {
                   <p>Rental price: ${vehicle.rental_price}</p>
                   <p>Availability: {vehicle.availability ? 'Available' : 'Not Available'}</p>
                   <div className="card-actions justify-end">
-                    <button className="btn bg-customBlue" onClick={handleRentNow}>Rent Now</button>
+                    <button className="btn bg-customBlue" onClick={() => handleRentNow(vehicle)}>Rent Now</button>
                   </div>
                 </div>
               </div>

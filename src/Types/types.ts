@@ -22,3 +22,25 @@ export interface TUsers {
     created_at?: Date;
     updated_at?: Date;
   } 
+
+  
+export interface TBooking {
+  id: number;
+  user_id: number;
+  vehicle_id: number;
+  location_id: number;
+  booking_date: string;
+  return_date: string;
+  total_amount: number;
+  booking_status: string;
+  created_at?: Date;
+  updated_at?: Date;
+}
+export interface TLocation {
+  id?: number;
+  name: string;
+  address: string;
+  contact_phone: string;
+  created_at?: Date | null;
+  updated_at?: Date | null;
+}

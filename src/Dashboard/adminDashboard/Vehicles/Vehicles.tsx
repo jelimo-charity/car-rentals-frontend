@@ -33,7 +33,6 @@ const CarForm: React.FC = () => {
   const [createVehicle, { isLoading: isCreating, isError: isCreateError, isSuccess: isCreateSuccess }] = vehiclesApi.useAddVehicleMutation();
   const { data: vehicles, error, isLoading: isFetching, refetch } = vehiclesApi.useGetVehiclesQuery();
   const [deleteVehicle] = vehiclesApi.useDeleteVehicleMutation();
-  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type, files } = e.target as HTMLInputElement;
@@ -45,16 +44,17 @@ const CarForm: React.FC = () => {
       setFormData({ ...formData, [name]: value });
     }
   };
-  const handleDelete = async (user_id: number) => {
+
+  const handleDelete = async (vehicle_id: number) => {
     try {
-      await deleteVehicle(user_id).unwrap();
+      await deleteVehicle(vehicle_id).unwrap();
       refetch();
       toast.success('Vehicle deleted successfully');
     } catch (error) {
       console.error("Failed to delete vehicle:", error);
       toast.error('Failed to delete vehicle');
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -105,7 +105,6 @@ const CarForm: React.FC = () => {
     }
   };
 
- 
   const handleEdit = (vehicle: TVehicle) => {
     // Implement edit logic here
     // For example:
@@ -127,15 +126,6 @@ const CarForm: React.FC = () => {
               fullWidth
               name="manufacturer"
               value={formData.manufacturer}
-              onChange={handleChange}
-            />
-            <TextField
-              label="availability"
-              variant="outlined"
-              className='text-customBlueDarker'
-              fullWidth
-              name="model"
-              value={formData.availability}
               onChange={handleChange}
             />
             <TextField
@@ -186,7 +176,7 @@ const CarForm: React.FC = () => {
               onChange={handleChange}
             />
             <TextField
-              label="Rental price"
+              label="Rental Price"
               variant="outlined"
               className='text-customBlueDarker'
               fullWidth
@@ -221,17 +211,17 @@ const CarForm: React.FC = () => {
           <Typography variant="h5" className='text-customBlueDarker' gutterBottom>Existing Vehicles</Typography>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {vehicles?.map((vehicle: TVehicle) => (
-              <Card key={vehicle.id}>
-                <CardContent>
+              <Card key={vehicle.id} className="flex flex-col">
+                <img src={vehicle.image_url} alt={`${vehicle.manufacturer} ${vehicle.model}`} style={{ width: '100%', height: 'auto', maxHeight: '200px', objectFit: 'cover' }} />
+                <CardContent className="flex-grow">
                   <Typography variant="h6">{vehicle.manufacturer} {vehicle.model}</Typography>
                   <Typography>Year: {vehicle.year}</Typography>
                   <Typography>Fuel Type: {vehicle.fuel_type}</Typography>
                   <Typography>Seating Capacity: {vehicle.seating_capacity}</Typography>
                   <Typography>Features: {vehicle.features}</Typography>
                   <Typography>Rental Rate: ${vehicle.rental_price}</Typography>
-                  <Typography>Availability: {vehicle.availability }</Typography>
-                  <img src={vehicle.image_url} alt={`${vehicle.manufacturer} ${vehicle.model}`} style={{ width: '100%', height: 'auto', marginBottom: '10px' }} />
-                  <div style={{ marginTop: '10px' }}>
+                  <Typography>Availability: {vehicle.availability ? 'Available' : 'Not Available'}</Typography>
+                  <div className="mt-auto">
                     <Button variant="contained" color="primary" onClick={() => handleEdit(vehicle)} style={{ marginRight: '10px' }}>Edit</Button>
                     <Button variant="contained" color="secondary" onClick={() => handleDelete(vehicle.id)}>Delete</Button>
                   </div>

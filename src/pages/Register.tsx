@@ -6,7 +6,6 @@ import { api } from '../features/Auth/authApi';
 import { toast } from 'react-toastify';
 import { setUser } from '../features/slices/authSlice';
 import { useDispatch } from 'react-redux';
-// import { setUser } from '../features/slices/authSlice';
 
 type Inputs = {
   full_name: string,
@@ -18,7 +17,6 @@ type Inputs = {
 
 const Register = () => {
   const navigate = useNavigate()
-
   const dispatch = useDispatch()
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
 

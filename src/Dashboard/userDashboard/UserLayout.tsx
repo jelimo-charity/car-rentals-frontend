@@ -32,13 +32,13 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
           <ListItemIcon>
             <DirectionsCarIcon style={{ color: 'white' }} />
           </ListItemIcon>
-          <ListItemText primary="Booking" className='text-white font-bold text-3xl'/>
+          <ListItemText primary="Booking History" className='text-white font-bold text-3xl'/>
         </ListItem>
         <ListItem button component={Link} to="/userdash/cart" className="hover:bg-blue-700 text-white font-bold">
           <ListItemIcon>
             <PeopleIcon style={{ color: 'white' }} />
           </ListItemIcon>
-          <ListItemText primary="Cart" className='text-white font-bold text-3xl'/>
+          <ListItemText primary="Booking" className='text-white font-bold text-3xl'/>
         </ListItem>
         <ListItem button component={Link} to="/userdash/profile" className="hover:bg-blue-700 text-bold">
           <ListItemIcon>

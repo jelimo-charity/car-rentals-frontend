@@ -7,6 +7,9 @@ import { api } from "../features/Auth/authApi";
 import authReducer from '../features/slices/authSlice';
 import { vehiclesApi } from "../features/Vehicles/VehicleApi";
 import { usersApi } from "../features/Users/usersApi";
+import cartSlice from "../features/Cart/cartSlice";
+import { bookingApi } from "../features/Booking/bookingApi";
+import { profileApi } from "../features/Profile/profileApi";
 
 const persistConfig = {
   key: 'root',
@@ -18,6 +21,12 @@ const rootReducer: Reducer = combineReducers({
   [api.reducerPath]: api.reducer,
   [vehiclesApi.reducerPath]: vehiclesApi.reducer,
   [usersApi.reducerPath]: usersApi.reducer,
+  [bookingApi.reducerPath]: bookingApi.reducer,
+  [profileApi.reducerPath]: profileApi.reducer,
+
+
+  cart: cartSlice
+
 
 });
 
@@ -33,7 +42,9 @@ export const store = configureStore({
     }).concat(
       api.middleware,
       vehiclesApi.middleware,
-      usersApi.middleware
+      usersApi.middleware,
+      bookingApi.middleware,
+      profileApi.middleware
     ),
 });
 
