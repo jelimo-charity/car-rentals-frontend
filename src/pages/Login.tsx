@@ -25,7 +25,7 @@ const Login = () => {
       const response = await createUser(data).unwrap();
       dispatch(setUser(response))
       toast.success('login successful')
-      navigate('/userdash')
+      navigate('/')
       console.log("API response:", response);
       
       if (response && response.msg && Array.isArray(response.msg) && response.msg.length > 0) {

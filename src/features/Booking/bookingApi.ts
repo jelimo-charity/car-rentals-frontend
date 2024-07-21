@@ -1,26 +1,12 @@
-// import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-// import { TBooking } from '../../Types/types';
 
-// export const bookingApi = createApi({
-//   reducerPath: 'bookingApi',
-//   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
-//   endpoints: (builder) => ({
-//     createBooking: builder.mutation<TBooking, Partial<TBooking>>({
-//       query: (newBooking) => ({
-//         url: '/bookings',
-//         method: 'POST',
-//         body: newBooking,
-//       }),
-//     }),
-   
-// });
 
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import { TBooking, TLocation } from '../../Types/types';
+import { prodURL } from '../../utils';
  
 export const bookingApi = createApi({
     reducerPath: 'bookingsApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+    baseQuery: fetchBaseQuery({ baseUrl: prodURL }),
     "tagTypes": ["booking"],
     endpoints: (builder) => ({
       geTBookings: builder.query<TBooking[], void>({

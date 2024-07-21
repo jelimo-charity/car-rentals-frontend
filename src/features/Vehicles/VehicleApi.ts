@@ -1,9 +1,10 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import { TVehicle } from '../../Types/types';
+import { prodURL } from '../../utils';
  
 export const vehiclesApi = createApi({
     reducerPath: 'vehiclesApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+    baseQuery: fetchBaseQuery({ baseUrl: prodURL }),
     "tagTypes": ["Vehicle"],
     endpoints: (builder) => ({
       getVehicles: builder.query<TVehicle[], void>({

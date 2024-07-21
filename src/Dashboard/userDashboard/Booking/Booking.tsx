@@ -39,9 +39,9 @@ const Booking: React.FC = () => {
       <Typography variant="h4" className="text-customBlue flex justify-center items-center" gutterBottom>
         Bookings
       </Typography>
-      {bookings && bookings.length === 0 ? (
+      
         <Typography>No bookings found</Typography>
-      ) : (
+      
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -54,9 +54,8 @@ const Booking: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {bookings?.map((booking: TBooking) => (
+              {Array.isArray(bookings) && bookings.map((booking: TBooking) => (
                 <TableRow key={booking.id}>
-                  {/* <TableCell>{booking.id}</TableCell> */}
                   <TableCell>{getVehicleDetails(booking.vehicle_id)}</TableCell>
                   <TableCell>{getLocationName(booking.location_id)}</TableCell>
                   <TableCell>{new Date(booking.booking_date).toLocaleDateString()}</TableCell>
@@ -67,7 +66,7 @@ const Booking: React.FC = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      )}
+      
     </div>
   );
 };

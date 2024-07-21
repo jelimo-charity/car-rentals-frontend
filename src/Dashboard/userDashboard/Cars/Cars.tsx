@@ -20,8 +20,7 @@ const Cars: React.FC = () => {
   });
 
   const { data: vehicles, error, isLoading: isFetching } = vehiclesApi.useGetVehiclesQuery();
-  console.log(vehicles);
-  
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -33,7 +32,7 @@ const Cars: React.FC = () => {
 
   const handleRentNow = (vehicle: TVehicle) => {
     dispatch(addToCart(vehicle));
-    navigate('/userdash/cart');
+    navigate(`/parentcomponent/${vehicle.id}`);
   };
 
   const handleReset = () => {

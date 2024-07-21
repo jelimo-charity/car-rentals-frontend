@@ -26,7 +26,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
           <ListItemIcon>
             <DashboardIcon style={{ color: 'white' }} />
           </ListItemIcon>
-          <ListItemText primary="Dashboard" className='text-white font-bold text-3xl'/>
+          <ListItemText primary="Dashboard Overview" className='text-white font-bold text-3xl'/>
         </ListItem>
         <ListItem button component={Link} to="/admindash/manage-vehicles" className="hover:bg-blue-700 text-white font-bold">
           <ListItemIcon>
@@ -40,11 +40,12 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
           </ListItemIcon>
           <ListItemText primary="Manage Users" className='text-white font-bold text-3xl'/>
         </ListItem>
-        <ListItem button component={Link} to="/admindash/reports" className="hover:bg-blue-700 text-bold">
+       
+        <ListItem button component={Link} to="/admindash/locations" className="hover:bg-blue-700 text-bold">
           <ListItemIcon>
             <AssessmentIcon style={{ color: 'white' }} />
           </ListItemIcon>
-          <ListItemText primary="Reports" className="text-white font-bold text-3xl" />
+          <ListItemText primary="Manage Location" className="text-white font-bold text-3xl" />
         </ListItem>
         
       </List>

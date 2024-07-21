@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, Card, CardContent, TextField, Button, CircularProgress } from '@mui/material';
+import { Typography, Card, CardContent, TextField, Button, CircularProgress, Modal, Box } from '@mui/material';
 import { vehiclesApi } from '../../../features/Vehicles/VehicleApi';
 import axios from 'axios';
 import { TVehicle } from '../../../Types/types';
@@ -30,18 +30,29 @@ const CarForm: React.FC = () => {
     features: '',
   });
 
-  const [createVehicle, { isLoading: isCreating, isError: isCreateError, isSuccess: isCreateSuccess }] = vehiclesApi.useAddVehicleMutation();
+  const [editFormData, setEditFormData] = useState<FormDataState>(formData);
+  const [editVehicleId, setEditVehicleId] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [createVehicle, { isLoading: isCreating }] = vehiclesApi.useAddVehicleMutation();
   const { data: vehicles, error, isLoading: isFetching, refetch } = vehiclesApi.useGetVehiclesQuery();
   const [deleteVehicle] = vehiclesApi.useDeleteVehicleMutation();
+  const [updateVehicle] = vehiclesApi.useUpdateVehicleMutation();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, isEdit = false) => {
     const { name, value, type, files } = e.target as HTMLInputElement;
     if (type === 'file' && files) {
-      setFormData({ ...formData, [name]: files[0] });
+      isEdit 
+        ? setEditFormData({ ...editFormData, [name]: files[0] }) 
+        : setFormData({ ...formData, [name]: files[0] });
     } else if (type === 'checkbox') {
-      setFormData({ ...formData, [name]: (e.target as HTMLInputElement).checked });
+      isEdit 
+        ? setEditFormData({ ...editFormData, [name]: (e.target as HTMLInputElement).checked }) 
+        : setFormData({ ...formData, [name]: (e.target as HTMLInputElement).checked });
     } else {
-      setFormData({ ...formData, [name]: value });
+      isEdit 
+        ? setEditFormData({ ...editFormData, [name]: value }) 
+        : setFormData({ ...formData, [name]: value });
     }
   };
 
@@ -64,7 +75,7 @@ const CarForm: React.FC = () => {
       if (formData.image) {
         const formDataImage = new FormData();
         formDataImage.append('file', formData.image);
-        formDataImage.append('upload_preset', 'carent'); // the upload preset 
+        formDataImage.append('upload_preset', 'carent');
 
         const response = await axios.post(
           'https://api.cloudinary.com/v1_1/dg9mim6xj/image/upload',
@@ -86,8 +97,8 @@ const CarForm: React.FC = () => {
         features: formData.features,
       };
 
-      await createVehicle(vehicleData);
-
+      await createVehicle(vehicleData).unwrap();
+      refetch();
       setFormData({
         rental_price: 0,
         availability: true,
@@ -99,17 +110,95 @@ const CarForm: React.FC = () => {
         seating_capacity: 0,
         features: '',
       });
-
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
-  const handleEdit = (vehicle: TVehicle) => {
-    // Implement edit logic here
-    // For example:
-    // console.log('Editing vehicle:', vehicle);
-    console.log(`Editing vehicle: ${vehicle.manufacturer} ${vehicle.model}`);
+  const handleEdit = async (id: number) => {
+    if (!vehicles) {
+      toast.error('Failed to fetch vehicles');
+      return;
+    }
+
+    const vehicleToUpdate = vehicles.find(vehicle => vehicle.id === id);
+
+    if (vehicleToUpdate) {
+      setEditVehicleId(id);
+      setEditFormData({
+        rental_price: vehicleToUpdate.rental_price,
+        availability: vehicleToUpdate.availability,
+        image: null,
+        manufacturer: vehicleToUpdate.manufacturer,
+        model: vehicleToUpdate.model,
+        year: vehicleToUpdate.year,
+        fuel_type: vehicleToUpdate.fuel_type,
+        seating_capacity: vehicleToUpdate.seating_capacity,
+        features: vehicleToUpdate.features,
+      });
+      setIsModalOpen(true);
+    } else {
+      toast.error('Vehicle not found');
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (!editVehicleId || !vehicles) return;
+
+    const vehicleToUpdate = vehicles.find(vehicle => vehicle.id === editVehicleId);
+
+    if (vehicleToUpdate) {
+      try {
+        let imageUrl = vehicleToUpdate.image_url;
+
+        if (editFormData.image) {
+          const formDataImage = new FormData();
+          formDataImage.append('file', editFormData.image);
+          formDataImage.append('upload_preset', 'carent');
+
+          const response = await axios.post(
+            'https://api.cloudinary.com/v1_1/dg9mim6xj/image/upload',
+            formDataImage
+          );
+
+          if (response.status === 200) {
+            imageUrl = response.data.secure_url;
+          } else {
+            console.error('Failed to upload image:', response.statusText);
+            toast.error('Failed to upload image');
+            return;
+          }
+        }
+
+        const updatedVehicleData: TVehicle = {
+          id: editVehicleId,
+          rental_price: editFormData.rental_price,
+          availability: editFormData.availability,
+          image_url: imageUrl,
+          manufacturer: editFormData.manufacturer,
+          model: editFormData.model,
+          year: editFormData.year,
+          fuel_type: editFormData.fuel_type,
+          seating_capacity: editFormData.seating_capacity,
+          features: editFormData.features,
+        };
+
+        await updateVehicle({ id: editVehicleId, updatedVehicle: updatedVehicleData }).unwrap();
+        refetch();
+        toast.success('Vehicle updated successfully');
+        setIsModalOpen(false);
+      }catch (error) {
+        if (error instanceof Error) {
+          console.error('Error:', error.message);
+          toast.error('Failed to update vehicle');
+        } else {
+          console.error('Unexpected error:', error);
+          toast.error('An unexpected error occurred');
+        }
+      }
+    } else {
+      toast.error('Vehicle not found');
+    }
   };
 
   return (
@@ -171,6 +260,7 @@ const CarForm: React.FC = () => {
               variant="outlined"
               className='text-customBlueDarker'
               fullWidth
+              multiline
               name="features"
               value={formData.features}
               onChange={handleChange}
@@ -183,21 +273,39 @@ const CarForm: React.FC = () => {
               type="number"
               name="rental_price"
               value={formData.rental_price}
-              onChange={(e) => setFormData({ ...formData, rental_price: parseInt(e.target.value) })}
+              onChange={(e) => setFormData({ ...formData, rental_price: parseFloat(e.target.value) })}
             />
-            <TextField
-              variant="outlined"
-              className='text-customBlueDarker'
-              fullWidth
-              name="image"
-              type="file"
-              onChange={handleChange}
-            />
-            <Button type="submit" variant="contained" className="sm:col-span-2" disabled={isCreating}>
-              {isCreating ? 'Adding...' : 'Add Vehicle'}
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                name="availability"
+                checked={formData.availability}
+                onChange={(e) => setFormData({ ...formData, availability: e.target.checked })}
+              />
+              <span className="ml-2">Available</span>
+            </label>
+            <Button
+              variant="contained"
+              component="label"
+              className='bg-customBlue'
+            >
+              Upload Image
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                hidden
+                onChange={(e) => handleChange(e)}
+              />
             </Button>
-            {isCreateError && <Typography color="error">Error adding vehicle</Typography>}
-            {isCreateSuccess && <Typography color="primary">Vehicle added successfully</Typography>}
+            <Button
+              variant="contained"
+              className="mt-4 sm:col-span-2 bg-customBlue"
+              type="submit"
+              disabled={isCreating}
+            >
+              {isCreating ? <CircularProgress size={24} /> : 'Add Vehicle'}
+            </Button>
           </form>
         </CardContent>
       </Card>
@@ -205,32 +313,133 @@ const CarForm: React.FC = () => {
       {isFetching ? (
         <CircularProgress />
       ) : error ? (
-        <Typography color="error">Error fetching vehicles</Typography>
+        <div>Error loading vehicles</div>
       ) : (
-        <div>
-          <Typography variant="h5" className='text-customBlueDarker' gutterBottom>Existing Vehicles</Typography>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {vehicles?.map((vehicle: TVehicle) => (
-              <Card key={vehicle.id} className="flex flex-col">
-                <img src={vehicle.image_url} alt={`${vehicle.manufacturer} ${vehicle.model}`} style={{ width: '100%', height: 'auto', maxHeight: '200px', objectFit: 'cover' }} />
-                <CardContent className="flex-grow">
-                  <Typography variant="h6">{vehicle.manufacturer} {vehicle.model}</Typography>
-                  <Typography>Year: {vehicle.year}</Typography>
-                  <Typography>Fuel Type: {vehicle.fuel_type}</Typography>
-                  <Typography>Seating Capacity: {vehicle.seating_capacity}</Typography>
-                  <Typography>Features: {vehicle.features}</Typography>
-                  <Typography>Rental Rate: ${vehicle.rental_price}</Typography>
-                  <Typography>Availability: {vehicle.availability ? 'Available' : 'Not Available'}</Typography>
-                  <div className="mt-auto">
-                    <Button variant="contained" color="primary" onClick={() => handleEdit(vehicle)} style={{ marginRight: '10px' }}>Edit</Button>
-                    <Button variant="contained" color="secondary" onClick={() => handleDelete(vehicle.id)}>Delete</Button>
-                  </div>
+        vehicles && (
+          <div>
+            {vehicles.map((vehicle: TVehicle) => (
+              <Card key={vehicle.id} className="mb-4">
+                <CardContent>
+                  <Typography variant="h6" className='text-customBlueDarker'>{vehicle.manufacturer} {vehicle.model}</Typography>
+                  <Typography className='text-customBlueDarker'>Year: {vehicle.year}</Typography>
+                  <Typography className='text-customBlueDarker'>Fuel Type: {vehicle.fuel_type}</Typography>
+                  <Typography className='text-customBlueDarker'>Seating Capacity: {vehicle.seating_capacity}</Typography>
+                  <Typography className='text-customBlueDarker'>Features: {vehicle.features}</Typography>
+                  <Typography className='text-customBlueDarker'>Rental Price: ${vehicle.rental_price}</Typography>
+                  <img src={vehicle.image_url} alt={vehicle.model} width="100" />
+                  <Button variant="contained" color="primary" className="mr-2" onClick={() => handleEdit(vehicle.id)}>Edit</Button>
+                  <Button variant="contained" color="secondary" onClick={() => handleDelete(vehicle.id)}>Delete</Button>
                 </CardContent>
               </Card>
             ))}
           </div>
-        </div>
+        )
       )}
+
+      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <Box className="p-4 bg-white">
+          <Typography variant="h6" className='text-customBlueDarker'>Edit Vehicle</Typography>
+          <form className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
+            <TextField
+              label="Manufacturer"
+              variant="outlined"
+              className='text-customBlueDarker'
+              fullWidth
+              name="manufacturer"
+              value={editFormData.manufacturer}
+              onChange={(e) => handleChange(e, true)}
+            />
+            <TextField
+              label="Model"
+              variant="outlined"
+              className='text-customBlueDarker'
+              fullWidth
+              name="model"
+              value={editFormData.model}
+              onChange={(e) => handleChange(e, true)}
+            />
+            <TextField
+              label="Year"
+              variant="outlined"
+              className='text-customBlueDarker'
+              fullWidth
+              type="number"
+              name="year"
+              value={editFormData.year}
+              onChange={(e) => setEditFormData({ ...editFormData, year: parseInt(e.target.value) })}
+            />
+            <TextField
+              label="Fuel Type"
+              variant="outlined"
+              className='text-customBlueDarker'
+              fullWidth
+              name="fuel_type"
+              value={editFormData.fuel_type}
+              onChange={(e) => handleChange(e, true)}
+            />
+            <TextField
+              label="Seating Capacity"
+              variant="outlined"
+              className='text-customBlueDarker'
+              fullWidth
+              type="number"
+              name="seating_capacity"
+              value={editFormData.seating_capacity}
+              onChange={(e) => setEditFormData({ ...editFormData, seating_capacity: parseInt(e.target.value) })}
+            />
+            <TextField
+              label="Features"
+              variant="outlined"
+              className='text-customBlueDarker'
+              fullWidth
+              multiline
+              name="features"
+              value={editFormData.features}
+              onChange={(e) => handleChange(e, true)}
+            />
+            <TextField
+              label="Rental Price"
+              variant="outlined"
+              className='text-customBlueDarker'
+              fullWidth
+              type="number"
+              name="rental_price"
+              value={editFormData.rental_price}
+              onChange={(e) => setEditFormData({ ...editFormData, rental_price: parseFloat(e.target.value) })}
+            />
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                name="availability"
+                checked={editFormData.availability}
+                onChange={(e) => setEditFormData({ ...editFormData, availability: e.target.checked })}
+              />
+              <span className="ml-2">Available</span>
+            </label>
+            <Button
+              variant="contained"
+              component="label"
+              className='bg-customBlue'
+            >
+              Upload Image
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                hidden
+                onChange={(e) => handleChange(e, true)}
+              />
+            </Button>
+            <Button
+              variant="contained"
+              className="mt-4 sm:col-span-2 bg-customBlue"
+              type="submit"
+            >
+              Update Vehicle
+            </Button>
+          </form>
+        </Box>
+      </Modal>
     </div>
   );
 };

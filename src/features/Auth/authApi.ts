@@ -1,9 +1,10 @@
 import { createApi,  fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { prodURL } from "../../utils";
 
 
 export const api = createApi({
     reducerPath: 'api',
-    baseQuery: fetchBaseQuery({baseUrl: 'http://localhost:8000'}),
+    baseQuery: fetchBaseQuery({baseUrl: prodURL}),
     endpoints: (builder) => ({
         login: builder.mutation({
             query: (credentials) => ({

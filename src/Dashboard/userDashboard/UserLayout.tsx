@@ -3,8 +3,8 @@ import { Outlet, Link } from 'react-router-dom';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import Logout from './Logout';
 
 
  const UserLayout = () => {
@@ -18,8 +18,8 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
     <Drawer
       variant="permanent"
       anchor="left"
-      className="w-64"
-      classes={{ paper: 'w-64 bg-gradient-to-r from-[#0D1B2A] via-[#1b263b] to-[#415a77] text-white' }}
+      className="w-60"
+      classes={{ paper: 'w-50 bg-gradient-to-r from-[#0D1B2A] via-[#1b263b] to-[#415a77] text-white' }}
     >
       <List>
         <ListItem button component={Link} to="/userdash" className="hover:bg-blue-700 text-white font-bold">
@@ -34,18 +34,14 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
           </ListItemIcon>
           <ListItemText primary="Booking History" className='text-white font-bold text-3xl'/>
         </ListItem>
-        <ListItem button component={Link} to="/userdash/cart" className="hover:bg-blue-700 text-white font-bold">
-          <ListItemIcon>
-            <PeopleIcon style={{ color: 'white' }} />
-          </ListItemIcon>
-          <ListItemText primary="Booking" className='text-white font-bold text-3xl'/>
-        </ListItem>
+        
         <ListItem button component={Link} to="/userdash/profile" className="hover:bg-blue-700 text-bold">
           <ListItemIcon>
             <AssessmentIcon style={{ color: 'white' }} />
           </ListItemIcon>
           <ListItemText primary="Profile" className="text-white font-bold text-3xl" />
         </ListItem>
+       <Logout />
         
       </List>
     </Drawer>

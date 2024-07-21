@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { prodURL } from '../../utils';
  
 export interface TUsers {
     id: number;
@@ -12,7 +13,7 @@ export interface TUsers {
  
 export const usersApi = createApi({
     reducerPath: 'usersApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+    baseQuery: fetchBaseQuery({ baseUrl: prodURL }),
     tagTypes: ['Users'],
     endpoints: (builder) => ({
         getUsers: builder.query<TUsers[], void>({

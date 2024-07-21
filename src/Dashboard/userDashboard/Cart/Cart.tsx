@@ -1,165 +1,181 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState} from 'react';
+import {  useSelector } from 'react-redux';
 import { RootState } from '../../../app/store';
-import { removeFromCart, clearCart } from '../../../features/Cart/cartSlice';
-import { TLocation, TVehicle } from '../../../Types/types';
-import { Typography, Button, Select, MenuItem, TextField } from '@mui/material';
+import {ClipLoader} from 'react-spinners'
 import { bookingApi } from '../../../features/Booking/bookingApi';
+import {loadStripe} from '@stripe/stripe-js'
+import { locationApi } from '../../../features/locations/locationsAPi';
+import { paymentsApi } from '../../../features/payments/paymentsAPI';
+import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
+import { TVehicle, TLocation } from '../../../Types/types';
 
-const Cart: React.FC = () => {
-  const dispatch = useDispatch();
-  const cartItems = useSelector((state: RootState) => state.cart.items);
-  const [addbooking] = bookingApi.useAddbookingMutation()
-  const [locations, setLocations] = useState([]);
-  const [bookingDetails, setBookingDetails] = useState({
-    booking_date: '', // Initially a string
-    return_date: '', // Initially a string
-    location_id: '', // Initially empty
-  });
 
-  useEffect(() => {
-    // Fetch available locations from your API
-    const fetchLocations = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/locations'); // Replace with your API endpoint
-        if (response.ok) {
-          const data = await response.json();
-          setLocations(data); // Assuming data is an array of locations with { id, name }
-        } else {
-          console.error('Failed to fetch locations');
-        }
-      } catch (error) {
-        console.error('Error fetching locations:', error);
-      }
-    };
 
-    fetchLocations();
-  }, []);
+const stripePromise = loadStripe(
+  'pk_test_51PaQJMRoBeFmDhXSoPF0uTiMjmGk1aWwd34vuSiU4dAE4p0sXiNhGEAjSlJkf2pjSiL2bxAnY9SZ1jMj8vHZEmJA00wrWpQ56O'
+)
+interface bookForm {
+  vehicle: TVehicle
+}
+const Cart: React.FC <bookForm>= ({vehicle}) => {
 
-  const handleRemove = (id: number) => {
-    dispatch(removeFromCart(id));
-  };
 
-  const handleBookingDetailsChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string | undefined; value: unknown; }>) => {
-    const { name, value } = e.target;
-    setBookingDetails({ ...bookingDetails, [name as string]: value as string });
-  };
-
+  const user = useSelector((state: RootState) => state.auth.user);
+  console.log(user.id)
+  const [addBooking, {isLoading:isLoadingBooking}] = bookingApi.useAddbookingMutation()
+  const {data:locations} = locationApi.useGetLocationsQuery()
+  const [createPayment] = paymentsApi.useAddPaymentMutation()
+  
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+  const [locationId, setLocationId] = useState<number | undefined>(undefined);
+  const [isPaymentLoading, setIsPaymentLoading] = useState<number | null>(null);
+ 
   const handleBooking = async () => {
-    if (!bookingDetails.booking_date || !bookingDetails.return_date || !bookingDetails.location_id) {
-      alert('Please fill in all booking details.');
+    if (!startDate || !endDate || !locationId || !user || !vehicle) {
+      toast.error('Please fill in all fields.');
       return;
     }
-  
+
+    const start = dayjs(startDate);
+    const end = dayjs(endDate);
+    const rentalDays = end.diff(start, 'day');
+
+    if (rentalDays <= 0) {
+      toast.error('End date must be after start date');
+      return;
+    }
+
+    const totalAmount = rentalDays * vehicle.rental_price;
+
+    const bookingData = {
+      
+      user_id: user.id,
+      vehicle_id: vehicle.id,
+      location_id: locationId,
+      booking_date: startDate,
+      return_date: endDate,
+      total_amount: totalAmount,
+    };
+   
+    console.log("Booking Data:", bookingData);
+
     try {
-      for (const vehicle of cartItems) {
-        const bookingData = {
-          user_id: 2,
-          vehicle_id: vehicle.id,
-          location_id: parseInt(bookingDetails.location_id),
-          booking_date: (bookingDetails.booking_date), 
-          return_date: (bookingDetails.return_date),
-          total_amount: vehicle.rental_price,
-        };
-  
-        console.log('Booking Data:', bookingData);
-  
-        const response = await addbooking(bookingData);
-  
-        console.log('Booking Response:', response);
-      }
-  
-      dispatch(clearCart());
-      alert('Booking Successful');
+      const newBooking = await addBooking(bookingData).unwrap();
+      toast.success('Booking created successfully');
+      
+      // Initiate payment
+      console.log(newBooking.id)
+      handleMakePayment(newBooking.id, totalAmount);
     } catch (error) {
       console.error('Error creating booking:', error);
-      alert('Booking Failed');
+      toast.error('Error creating booking');
     }
   };
-  
+
+  const handleMakePayment = async (bookingId: number, amount: number) => {
+    if (!bookingId) {
+      console.error('Booking ID is missing');
+      toast.error('Booking ID is missing');
+      return;
+    }
+    setIsPaymentLoading(bookingId);
+    try {
+      const res = await createPayment({ booking_id: bookingId, total_amount: amount }).unwrap();
+      toast.success('Payment initiated successfully');
+      console.log('Payment response:', res);
+      if (res.url) {
+        window.location.href = res.url;  // Redirect to the Stripe checkout URL
+      } else {
+        const stripe = await stripePromise;
+        if (stripe && res.transaction_id) {
+          const { error } = await stripe.redirectToCheckout({ sessionId: res.transaction_id });
+          if (error) {
+            console.error('Error redirecting to checkout:', error);
+            toast.error('Error redirecting to checkout');
+          }else{
+            //update booking status
+            // await updateStatus({id: bookingId, status: 'Completed'}).unwrap(); 
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error initiating payment:', error);
+      toast.error('Error initiating payment');
+
+      // await updateStatus({id: bookingId, status: 'Cancelled'}).unwrap();
+    } finally {
+      setIsPaymentLoading(null);
+    }
+  };
 
   return (
-    <div className="p-4 bg-customBlueDarkest">
-      <Typography variant="h4" className="text-customBlue flex justify-center items-center" gutterBottom>
-        Your Cart
-      </Typography>
-      {cartItems.length === 0 ? (
-        <Typography>Your have no bookings to make</Typography>
-      ) : (
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {cartItems.map((vehicle: TVehicle) => (
-              <div key={vehicle.id} className="card card-compact bg-customBlueDarker shadow-xl w-full mb-6">
-                <figure className="h-40 overflow-hidden">
-                  <img
-                    src={vehicle.image_url}
-                    alt={`${vehicle.manufacturer} ${vehicle.model}`}
-                    className="object-cover h-full w-full"
-                  />
-                </figure>
-                <div className="card-body">
-                  <h2 className="card-title">{vehicle.manufacturer} {vehicle.model}</h2>
-                  <p>Year: {vehicle.year}</p>
-                  <p>Fuel Type: {vehicle.fuel_type}</p>
-                  <p>Seating Capacity: {vehicle.seating_capacity}</p>
-                  <p>Features: {vehicle.features}</p>
-                  <p>Rental price: ${vehicle.rental_price}</p>
-                  <p>Availability: {vehicle.availability ? 'Available' : 'Not Available'}</p>
-                  <div className="card-actions justify-end">
-                    <button className="btn bg-customBlue" onClick={() => handleRemove(vehicle.id)}>Remove</button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4">
-            <Typography variant="h5" className="text-customBlue flex justify-center items-center" gutterBottom>
-              Booking Details
-            </Typography>
-            <div className="flex flex-col gap-4 max-w-md mx-auto">
-              <TextField
-                label="Booking Date"
-                variant="outlined"
-                name="booking_date"
-                type="date"
-                value={bookingDetails.booking_date}
-                onChange={handleBookingDetailsChange}
-                InputLabelProps={{ shrink: true }}
-                className="bg-customBlueLight rounded"
-              />
-              <TextField
-                label="Return Date"
-                variant="outlined"
-                name="return_date"
-                type="date"
-                value={bookingDetails.return_date}
-                onChange={handleBookingDetailsChange}
-                InputLabelProps={{ shrink: true }}
-                className="bg-customBlueLight rounded"
-              />
-              <Select
-                variant="outlined"
-                name="location_id"
-                value={bookingDetails.location_id}
-                onChange={handleBookingDetailsChange}
-                className="bg-customBlueLight rounded"
-              >
-                {locations.map((location: TLocation) => (
-                  <MenuItem key={location.id} value={location.id}>
-                    {location.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </div>
-            <div className="flex justify-center mt-4">
-              <Button variant="contained" className="bg-customBlueDarker" onClick={handleBooking}>
-                Proceed to Pay
-              </Button>
-            </div>
-          </div>
+    <>
+     
+    <div className="p-4 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-semibold mb-4">Book Vehicle</h2>
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2">Start Date</label>
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2">End Date</label>
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2">Location</label>
+        <select
+          value={locationId}
+          onChange={(e) => setLocationId(Number(e.target.value))}
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        >
+          <option value="">Select a location</option>
+          {locations?.map((location: TLocation) => (
+            <option key={location.id} value={location.id}>
+              {location.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2">Vehicle</label>
+        <div className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          {vehicle.manufacturer} {vehicle.model}
         </div>
-      )}
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2">Rental Rate</label>
+        <div className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          ${vehicle.rental_price} per day
+        </div>
+      </div>
+      <button
+        onClick={handleBooking}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        disabled={isLoadingBooking || isPaymentLoading !== null}
+      >
+        {isLoadingBooking || isPaymentLoading !== null ? (
+          <div className='flex items-center'>
+            <ClipLoader size={24} color="white" />
+            <span> Processing...</span>
+          </div>
+        ) : (
+          "Book Now"
+        )}
+      </button>
     </div>
+  </>
   );
 };
 
