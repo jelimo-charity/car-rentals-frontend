@@ -40,7 +40,6 @@ const Booking: React.FC = () => {
         Bookings
       </Typography>
       
-        <Typography>No bookings found</Typography>
       
         <TableContainer component={Paper}>
           <Table>

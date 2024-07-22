@@ -14,7 +14,6 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^5.16.4",
     "@mui/material": "^5.16.4",
-    "@mui/styles": "^5.16.4",
     "@reduxjs/toolkit": "^2.2.6",
     "@stripe/stripe-js": "^4.1.0",
     "axios": "^1.7.2",
