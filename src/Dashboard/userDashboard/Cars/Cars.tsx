@@ -143,7 +143,11 @@ const Cars: React.FC = () => {
         <div className="container mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredVehicles?.map((vehicle: TVehicle) => (
-              <div key={vehicle.id} className="card card-compact bg-customBlueDarker shadow-xl w-full mb-6">
+              <div
+                key={vehicle.id}
+                className="card card-compact bg-customBlueDarker shadow-xl w-full mb-6 relative overflow-hidden group"
+                onClick={() => handleRentNow(vehicle)}
+              >
                 <figure className="h-40 overflow-hidden">
                   <img
                     src={vehicle.image_url}
@@ -151,17 +155,24 @@ const Cars: React.FC = () => {
                     className="object-cover h-full w-full"
                   />
                 </figure>
-                <div className="card-body">
-                  <h2 className="card-title">{vehicle.manufacturer} {vehicle.model}</h2>
-                  <p>Year: {vehicle.year}</p>
-                  <p>Fuel Type: {vehicle.fuel_type}</p>
-                  <p>Seating Capacity: {vehicle.seating_capacity}</p>
-                  <p>Features: {vehicle.features}</p>
-                  <p>Rental price: ${vehicle.rental_price}</p>
-                  <p>Availability: {vehicle.availability ? 'Available' : 'Not Available'}</p>
-                  <div className="card-actions justify-end">
-                    <button className="btn bg-customBlue" onClick={() => handleRentNow(vehicle)}>Rent Now</button>
+                <div className="card-body text-white relative z-10">
+                  <h2 className="card-title text-xl font-bold text-customBlueLight">{vehicle.manufacturer} {vehicle.model} ({vehicle.year})</h2>
+                  <div className="availability-price flex justify-between mt-2">
+                    <p className="text-lg font-bold text-green-500">
+                      {vehicle.availability ? 'Available' : 'Not Available'}
+                    </p>
+                    <p className="text-lg font-bold text-yellow-500">
+                      ${vehicle.rental_price}/hour
+                    </p>
                   </div>
+                  <div className="card-actions mt-4">
+                    <button className="btn bg-customBlueDarker">Click to Rent Now</button>
+                  </div>
+                </div>
+                <div className="card-hover-details absolute inset-x-0 bottom-0 bg-customBlueDarker bg-opacity-90 p-4 hidden group-hover:block">
+                  <p className="mb-2">Features: <span className="text-yellow-500">{vehicle.features}</span></p>
+                  <p className="mb-2">Fuel Type: <span className="text-yellow-500">{vehicle.fuel_type}</span></p>
+                  <p>Seating Capacity: <span className="text-yellow-500">{vehicle.seating_capacity}</span></p>
                 </div>
               </div>
             ))}

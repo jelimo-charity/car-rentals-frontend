@@ -1,19 +1,21 @@
+
 const About = () => {
     return (
-      < section >
-        <div className='flex flex-wrap gap-2 sm:gap-x-6 mt-40 items-center justify-center '>
-          <h1 className='text-4xl font-bold leading-none tracking-tight sm:text-6xl '>
+      <div className="bg-customBlueLight">
+
+        <div className='flex flex-wrap gap-2 sm:gap-x-6 pt-20 items-center justify-center '>
+          <h1 className='text-4xl text-customBlueDarkest font-bold leading-none tracking-tight sm:text-6xl '>
             We love
           </h1>
-          <div className='stats bg-primary shadow'>
+          <div className='stats bg-customBlue shadow'>
             <div className='stat'>
-              <div className='stat-title text-primary-content text-4xl font-bold tracking-widest'>
+              <div className='stat-title text-primary-content  text-4xl font-bold tracking-widest'>
                 Speedy Cars
               </div>
             </div>
           </div>
         </div>
-        <p className='mt-6 text-lg leading-8 max-w-2xl mx-auto'>
+        <p className='mt-10 text-customBlueDarkest pb-20 text-lg leading-8 max-w-2xl mx-auto'>
            
 Welcome to Speedy Wheels Car Rentals! With over a decade of experience serving travelers across Kenya, we pride ourselves on 
 providing hassle-free mobility solutions.
@@ -23,7 +25,7 @@ At Speedy Wheels, we believe in quality, integrity, and exceptional customer ser
 rental experience is smooth, efficient, and tailored to your needs. Join us on the road and discover the freedom of exploring
  Kenya with confidence.
         </p>
-      </section>
+      </div>
     );
   };
   export default About;

@@ -57,11 +57,11 @@ try {
 
   
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md">
-    <h2 className="text-2xl font-semibold mb-4">Account Settings</h2>
-    <form onSubmit={handleSave} className="space-y-4">
+    <div className="p-4 bg-customBlueDarker rounded-lg shadow-md">
+    <h2 className="text-3xl text-customBlueLight font-semibold mb-4">User Profile</h2>
+    <form onSubmit={handleSave} className="space-y-4 b">
         <div>
-            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="fullName" className="block text-sm font-medium text-customBlue">
                 Full Name
             </label>
             <input
@@ -69,11 +69,11 @@ try {
                 id="fullName"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 p-2 block w-full border text-customBlueDarkest border-customBlueDarkest bg-customBlueLight rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
         </div>
         <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="block text-sm font-medium  text-customBlue">
                 Email
             </label>
             <input
@@ -81,11 +81,11 @@ try {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 p-2 block w-full border text-customBlueDarkest border-customBlueDarkest bg-customBlueLight  rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
         </div>
         <div>
-            <label htmlFor="contactPhone" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="contactPhone" className="block text-sm font-medium  text-customBlue">
                 Contact Phone
             </label>
             <input
@@ -93,11 +93,11 @@ try {
                 id="contactPhone"
                 value={contactPhone}
                 onChange={(e) => setContactPhone(e.target.value)}
-                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 p-2 block w-full border text-customBlueDarkest border-customBlueDarkest bg-customBlueLight rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
         </div>
         <div>
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="address" className="block text-customBlue text-sm font-medium  ">
                 Address
             </label>
             <input
@@ -105,7 +105,7 @@ try {
                 id="address"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 p-2 block w-full border text-customBlueDarkest border-customBlueDarkest bg-customBlueLight rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
         </div>
         <div>

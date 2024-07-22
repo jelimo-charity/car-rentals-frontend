@@ -4,6 +4,24 @@ import { vehiclesApi } from '../../../features/Vehicles/VehicleApi';
 import axios from 'axios';
 import { TVehicle } from '../../../Types/types';
 import { toast } from 'react-toastify';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles({
+  card: {
+    maxWidth: 300,
+    margin: 'auto',
+  },
+  media: {
+    height: 140,
+  },
+  button: {
+    margin: '0 5px',
+  },
+  image: {
+    width: '100%',
+    height: 'auto',
+  },
+});
 
 interface FormDataState {
   rental_price: number;
@@ -18,6 +36,7 @@ interface FormDataState {
 }
 
 const CarForm: React.FC = () => {
+  const classes = useStyles();
   const [formData, setFormData] = useState<FormDataState>({
     rental_price: 0,
     availability: true,
@@ -35,7 +54,7 @@ const CarForm: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [createVehicle, { isLoading: isCreating }] = vehiclesApi.useAddVehicleMutation();
-  const { data: vehicles, error, isLoading: isFetching, refetch } = vehiclesApi.useGetVehiclesQuery();
+  const { data: vehicles,  isLoading: isFetching, refetch } = vehiclesApi.useGetVehiclesQuery();
   const [deleteVehicle] = vehiclesApi.useDeleteVehicleMutation();
   const [updateVehicle] = vehiclesApi.useUpdateVehicleMutation();
 
@@ -204,6 +223,7 @@ const CarForm: React.FC = () => {
   return (
     <div className="p-4">
       <Typography variant="h4" className='text-customBlue' gutterBottom>Manage Vehicles</Typography>
+
       <Card className="mb-4">
         <CardContent>
           <Typography variant="h6" className='text-customBlueDarker'>Add New Vehicle</Typography>
@@ -256,16 +276,6 @@ const CarForm: React.FC = () => {
               onChange={(e) => setFormData({ ...formData, seating_capacity: parseInt(e.target.value) })}
             />
             <TextField
-              label="Features"
-              variant="outlined"
-              className='text-customBlueDarker'
-              fullWidth
-              multiline
-              name="features"
-              value={formData.features}
-              onChange={handleChange}
-            />
-            <TextField
               label="Rental Price"
               variant="outlined"
               className='text-customBlueDarker'
@@ -275,172 +285,175 @@ const CarForm: React.FC = () => {
               value={formData.rental_price}
               onChange={(e) => setFormData({ ...formData, rental_price: parseFloat(e.target.value) })}
             />
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                name="availability"
-                checked={formData.availability}
-                onChange={(e) => setFormData({ ...formData, availability: e.target.checked })}
-              />
-              <span className="ml-2">Available</span>
-            </label>
-            <Button
-              variant="contained"
-              component="label"
-              className='bg-customBlue'
-            >
-              Upload Image
-              <input
-                type="file"
-                name="image"
-                accept="image/*"
-                hidden
-                onChange={(e) => handleChange(e)}
-              />
-            </Button>
-            <Button
-              variant="contained"
-              className="mt-4 sm:col-span-2 bg-customBlue"
-              type="submit"
-              disabled={isCreating}
-            >
-              {isCreating ? <CircularProgress size={24} /> : 'Add Vehicle'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      {isFetching ? (
-        <CircularProgress />
-      ) : error ? (
-        <div>Error loading vehicles</div>
-      ) : (
-        vehicles && (
-          <div>
-            {vehicles.map((vehicle: TVehicle) => (
-              <Card key={vehicle.id} className="mb-4">
-                <CardContent>
-                  <Typography variant="h6" className='text-customBlueDarker'>{vehicle.manufacturer} {vehicle.model}</Typography>
-                  <Typography className='text-customBlueDarker'>Year: {vehicle.year}</Typography>
-                  <Typography className='text-customBlueDarker'>Fuel Type: {vehicle.fuel_type}</Typography>
-                  <Typography className='text-customBlueDarker'>Seating Capacity: {vehicle.seating_capacity}</Typography>
-                  <Typography className='text-customBlueDarker'>Features: {vehicle.features}</Typography>
-                  <Typography className='text-customBlueDarker'>Rental Price: ${vehicle.rental_price}</Typography>
-                  <img src={vehicle.image_url} alt={vehicle.model} width="100" />
-                  <Button variant="contained" color="primary" className="mr-2" onClick={() => handleEdit(vehicle.id)}>Edit</Button>
-                  <Button variant="contained" color="secondary" onClick={() => handleDelete(vehicle.id)}>Delete</Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )
-      )}
-
-      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <Box className="p-4 bg-white">
-          <Typography variant="h6" className='text-customBlueDarker'>Edit Vehicle</Typography>
-          <form className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
-            <TextField
-              label="Manufacturer"
-              variant="outlined"
-              className='text-customBlueDarker'
-              fullWidth
-              name="manufacturer"
-              value={editFormData.manufacturer}
-              onChange={(e) => handleChange(e, true)}
-            />
-            <TextField
-              label="Model"
-              variant="outlined"
-              className='text-customBlueDarker'
-              fullWidth
-              name="model"
-              value={editFormData.model}
-              onChange={(e) => handleChange(e, true)}
-            />
-            <TextField
-              label="Year"
-              variant="outlined"
-              className='text-customBlueDarker'
-              fullWidth
-              type="number"
-              name="year"
-              value={editFormData.year}
-              onChange={(e) => setEditFormData({ ...editFormData, year: parseInt(e.target.value) })}
-            />
-            <TextField
-              label="Fuel Type"
-              variant="outlined"
-              className='text-customBlueDarker'
-              fullWidth
-              name="fuel_type"
-              value={editFormData.fuel_type}
-              onChange={(e) => handleChange(e, true)}
-            />
-            <TextField
-              label="Seating Capacity"
-              variant="outlined"
-              className='text-customBlueDarker'
-              fullWidth
-              type="number"
-              name="seating_capacity"
-              value={editFormData.seating_capacity}
-              onChange={(e) => setEditFormData({ ...editFormData, seating_capacity: parseInt(e.target.value) })}
-            />
             <TextField
               label="Features"
               variant="outlined"
               className='text-customBlueDarker'
               fullWidth
-              multiline
               name="features"
-              value={editFormData.features}
-              onChange={(e) => handleChange(e, true)}
+              value={formData.features}
+              onChange={handleChange}
             />
-            <TextField
-              label="Rental Price"
-              variant="outlined"
-              className='text-customBlueDarker'
-              fullWidth
-              type="number"
-              name="rental_price"
-              value={editFormData.rental_price}
-              onChange={(e) => setEditFormData({ ...editFormData, rental_price: parseFloat(e.target.value) })}
-            />
-            <label className="flex items-center">
+            <label htmlFor="availability">
               <input
                 type="checkbox"
+                id="availability"
                 name="availability"
-                checked={editFormData.availability}
-                onChange={(e) => setEditFormData({ ...editFormData, availability: e.target.checked })}
+                checked={formData.availability}
+                onChange={(e) => handleChange(e)}
               />
-              <span className="ml-2">Available</span>
+              Availability
             </label>
+            <input
+              type="file"
+              name="image"
+              onChange={(e) => handleChange(e)}
+              accept="image/*"
+            />
             <Button
-              variant="contained"
-              component="label"
-              className='bg-customBlue'
-            >
-              Upload Image
-              <input
-                type="file"
-                name="image"
-                accept="image/*"
-                hidden
-                onChange={(e) => handleChange(e, true)}
-              />
-            </Button>
-            <Button
-              variant="contained"
-              className="mt-4 sm:col-span-2 bg-customBlue"
               type="submit"
+              variant="contained"
+              color="primary"
+              className="bg-customBlue text-customWhite"
+              disabled={isCreating}
             >
-              Update Vehicle
+              {isCreating ? <CircularProgress size={24} color="inherit" /> : 'Add Vehicle'}
             </Button>
           </form>
+        </CardContent>
+      </Card>
+      <Typography variant="h4" className='text-customBlue' gutterBottom>Existing Speedy Cars</Typography>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {isFetching ? (
+          <CircularProgress className="text-customBlue" />
+        ) : (
+          vehicles?.map((vehicle: TVehicle) => (
+            <div>
+            <Card key={vehicle.id} className={classes.card}>
+              <img src={vehicle.image_url} alt={vehicle.model} className={classes.image} />
+              <CardContent>
+                <Typography variant="h6" className='text-customBlueDarker'>{vehicle.manufacturer} {vehicle.model}</Typography>
+                <Typography>Year: {vehicle.year}</Typography>
+                <Typography>Fuel Type: {vehicle.fuel_type}</Typography>
+                <Typography>Seating: {vehicle.seating_capacity}</Typography>
+                <Typography>Price: ${vehicle.rental_price}</Typography>
+                <Button
+                  className={`${classes.button} bg-customBlue text-customWhite`}
+                  variant="contained"
+                  onClick={() => handleEdit(vehicle.id)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  className={`${classes.button} bg-customRed text-customWhite`}
+                  variant="contained"
+                  onClick={() => handleDelete(vehicle.id)}
+                >
+                  Delete
+                </Button>
+              </CardContent>
+            </Card>
+            </div>
+          ))
+        )}
+      </div>
+      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <Box
+          component="form"
+          onSubmit={handleUpdate}
+          className="bg-customWhite p-4"
+        >
+          <Typography variant="h6" className='text-customBlueDarker'>Edit Vehicle</Typography>
+          <TextField
+            label="Manufacturer"
+            variant="outlined"
+            fullWidth
+            name="manufacturer"
+            value={editFormData.manufacturer}
+            onChange={(e) => handleChange(e, true)}
+          />
+          <TextField
+            label="Model"
+            variant="outlined"
+            fullWidth
+            name="model"
+            value={editFormData.model}
+            onChange={(e) => handleChange(e, true)}
+          />
+          <TextField
+            label="Year"
+            variant="outlined"
+            fullWidth
+            type="number"
+            name="year"
+            value={editFormData.year}
+            onChange={(e) => setEditFormData({ ...editFormData, year: parseInt(e.target.value) })}
+          />
+          <TextField
+            label="Fuel Type"
+            variant="outlined"
+            fullWidth
+            name="fuel_type"
+            value={editFormData.fuel_type}
+            onChange={(e) => handleChange(e, true)}
+          />
+          <TextField
+            label="Seating Capacity"
+            variant="outlined"
+            fullWidth
+            type="number"
+            name="seating_capacity"
+            value={editFormData.seating_capacity}
+            onChange={(e) => setEditFormData({ ...editFormData, seating_capacity: parseInt(e.target.value) })}
+          />
+          <TextField
+            label="Rental Price"
+            variant="outlined"
+            fullWidth
+            type="number"
+            name="rental_price"
+            value={editFormData.rental_price}
+            onChange={(e) => setEditFormData({ ...editFormData, rental_price: parseFloat(e.target.value) })}
+          />
+          <TextField
+            label="Features"
+            variant="outlined"
+            fullWidth
+            name="features"
+            value={editFormData.features}
+            onChange={(e) => handleChange(e, true)}
+          />
+          <label htmlFor="editAvailability">
+            <input
+              type="checkbox"
+              id="editAvailability"
+              name="availability"
+              checked={editFormData.availability}
+              onChange={(e) => handleChange(e, true)}
+            />
+            Availability
+          </label>
+          <input
+            type="file"
+            name="image"
+            onChange={(e) => handleChange(e, true)}
+            accept="image/*"
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className="bg-customBlue text-customWhite"
+            disabled={isCreating}
+          >
+            {isCreating ? <CircularProgress size={24} color="inherit" /> : 'Update Vehicle'}
+          </Button>
         </Box>
       </Modal>
+        
     </div>
+  
   );
 };
 

@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Error from './pages/Error';
 import Home from './pages/Home';
-import About from './pages/About';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import { ToastContainer } from 'react-toastify';
@@ -20,19 +19,16 @@ import ParentComponent from './Dashboard/userDashboard/Cart/ParentComponent';
 import PaymentSuccess from './pages/Successpay';
 import ProtectedRoute from './components/ProtectRoutes';
 import LocationForm from './Dashboard/adminDashboard/Location/Location';
+import Layout from './components/Layout';
 
 function App() {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <Home />,
+      element: <Layout><Home /></Layout>,
       errorElement: <Error />,
     },
-    {
-      path: '/about',
-      element: <About />,
-      errorElement: <Error />,
-    },
+    
     {
       path: '/register',
       element: <Register />,
