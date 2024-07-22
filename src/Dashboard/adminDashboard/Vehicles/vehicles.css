@@ -1,0 +1,25 @@
+/* Style for the card media/image */
+.w-24 {
+    width: 6rem; /* Adjust the width as needed */
+  }
+  
+  .h-24 {
+    height: 6rem; /* Adjust the height as needed */
+  }
+  
+  .object-cover {
+    object-fit: cover;
+  }
+  
+  .flex {
+    display: flex;
+  }
+  
+  .flex-1 {
+    flex: 1;
+  }
+  
+  .mr-4 {
+    margin-right: 16px;
+  }
+  
