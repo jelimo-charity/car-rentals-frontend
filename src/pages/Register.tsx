@@ -42,7 +42,7 @@ const Register = () => {
 
 
   return (
-    <section className='h-screen flex justify-center items-center bg-customBlue'>
+    <section className='h-screen flex justify-center items-center bg-customBlueDarkest'>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className='card p-8 bg-customBlueDarker shadow-lg w-96 flex flex-col gap-4 rounded-lg'
