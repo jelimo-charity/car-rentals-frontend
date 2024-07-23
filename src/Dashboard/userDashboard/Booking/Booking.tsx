@@ -44,12 +44,12 @@ const Booking: React.FC = () => {
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
-              <TableRow>
-                <TableCell>Vehicle</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Booking Date</TableCell>
-                <TableCell>Return Date</TableCell>
-                <TableCell>Total Amount</TableCell>
+              <TableRow >
+                <TableCell className='text-yellow-500'>Vehicle</TableCell>
+                <TableCell className='text-yellow-500'>Location</TableCell>
+                <TableCell className='text-yellow-500'>Booking Date</TableCell>
+                <TableCell className='text-yellow-500'>Return Date</TableCell>
+                <TableCell className='text-yellow-500'>Total Amount</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

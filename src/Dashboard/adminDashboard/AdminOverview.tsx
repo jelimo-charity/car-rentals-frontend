@@ -29,8 +29,8 @@ const AdminDashboard: React.FC = () => {
 
  
   return (
-    <div className="p-4">
-      <Typography variant="h4" gutterBottom>Admin Dashboard</Typography>
+    <div className="p-4 bg-customBlueLight">
+      <Typography variant="h4" className='text-customBlueDarkest' gutterBottom>Admin Dashboard</Typography>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <Card className="col-span-1">
           <CardContent>
@@ -51,7 +51,7 @@ const AdminDashboard: React.FC = () => {
           </CardContent>
         </Card>
       </div>
-      <div className="mt-8">
+      <div className="mt-8 text-customBlueLight">
         <LineChart width={500} height={300} data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />

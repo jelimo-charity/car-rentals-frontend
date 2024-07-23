@@ -24,21 +24,21 @@ const handleDeleteUser = async (user_id: number) => {
 }
   return (
     <div className="p-4">
-      <Typography variant="h4" gutterBottom>Manage Users</Typography>
+      <Typography variant="h4" className='text-yellow-500' gutterBottom> Users List</Typography>
       <Card>
         <CardContent>
-          <Typography variant="h6">User List</Typography>
+          {/* <Typography variant="h6">User List</Typography> */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {usersData.map((user: TUsers) => (
               <Card key={user.id} className="flex flex-col">
-                <CardContent>
-                <Typography variant="h6" className="text-blue-800">{user.full_name}</Typography>
-                  <Typography variant="body2" className="text-gray-700">{user.email}</Typography>
-                  <Typography variant="body2" className="text-gray-700">{user.contact_phone}</Typography>
-                  <Typography variant="body2" className="text-gray-700">{user.address}</Typography>
+                <CardContent>  
+                <Typography variant="h6" className="text-customBlueDarker">{user.full_name}</Typography>
+                  <Typography variant="body2" className="text-customBlueDarkest">{user.email}</Typography>
+                  <Typography variant="body2" className="text-customBlueDarkest">{user.contact_phone}</Typography>
+                  <Typography variant="body2" className="text-customBlueDarkest">{user.address}</Typography>
                   {/* <Typography variant="body2" className="text-gray-700">{user.role}</Typography> */}
                   <div className="flex justify-between mt-4">
-                    <Button variant='contained' color='primary' onClick={() => handleDeleteUser(user.id)}>Delete</Button>
+                    <Button variant='contained'  className='bg-red-500' onClick={() => handleDeleteUser(user.id)}>Delete</Button>
                   </div>
                 </CardContent>
               </Card>

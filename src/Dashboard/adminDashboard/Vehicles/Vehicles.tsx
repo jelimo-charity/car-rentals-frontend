@@ -366,14 +366,14 @@ const CarForm: React.FC = () => {
         <CircularProgress />
       ) : (
         vehicles?.map((vehicle) => (
-          <Card key={vehicle.id} className="mb-4">
+          <Card key={vehicle.id} className="mb-4 max-w-xl  ">
             <CardContent>
-              <div className="flex">
+              <div className="flex flex-col ">
                 <CardMedia
                   component="img"
                   image={vehicle.image_url}
                   alt={`${vehicle.manufacturer} ${vehicle.model}`}
-                  className="w-24 h-24 object-cover mr-4"
+                  className="w-24 h-28  mr-4"
                 />
                 <div className="flex-1">
                   <Typography variant="h6" className="text-customBlueDarker">
@@ -403,7 +403,7 @@ const CarForm: React.FC = () => {
                     <Button
                       variant="contained"
                       color="primary"
-                      className="bg-customBlue text-white"
+                      className="bg-customBlue  text-white"
                       onClick={() => handleEdit(vehicle.id)}
                     >
                       Edit
