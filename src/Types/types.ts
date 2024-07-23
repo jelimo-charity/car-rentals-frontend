@@ -5,7 +5,6 @@ export interface TUsers {
     contact_phone: string;
     address: string;
     role: string;
-    // profile_image: string;
   }
    
   export interface TVehicle {
@@ -44,3 +43,14 @@ export interface TLocation {
   created_at?: Date | null;
   updated_at?: Date | null;
 }
+
+export interface TCustomer {
+  id: number;
+  user_id: number;
+  subject: string;
+  description: string;
+  status: string;
+  created_at: Date | null;
+  updated_at: Date | null;
+}
+

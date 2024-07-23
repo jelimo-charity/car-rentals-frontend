@@ -20,6 +20,7 @@ import PaymentSuccess from './pages/Successpay';
 import ProtectedRoute from './components/ProtectRoutes';
 import LocationForm from './Dashboard/adminDashboard/Location/Location';
 import Layout from './components/Layout';
+import CreateTicketForm from './Dashboard/userDashboard/Ticket';
 
 function App() {
   const router = createBrowserRouter([
@@ -38,6 +39,12 @@ function App() {
       path: '/login',
       element: <Login />,
       errorElement: <Error />,
+    },
+    {
+      path: '/contact',
+      element: <CreateTicketForm />,
+      errorElement: <Error />,
+
     },
     {
       path: '/payment-successful',
@@ -76,6 +83,7 @@ function App() {
           path: '',
           element: <Cars />,
         },
+       
        
         {
           path: 'profile',

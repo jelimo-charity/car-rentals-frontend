@@ -16,6 +16,8 @@ const Navbar = () => {
   <ul tabIndex={0} className="flex flex-row bg-customBlueDarkest mr-10 rounded-box z-[1]  p-2 shadow">
     <li className="mr-2"><Link to="/">Home</Link></li>
     <li className="mr-2"><Link to="cars">Cars</Link></li>
+    <li className="mr-2"><Link to="contact">Contact</Link></li>
+
     {
       auth.user && (
         <li className="mr-2"><Link to={auth.user.role === 'admin' ? '/admindash' : '/userdash'}>Dashboard</Link></li>

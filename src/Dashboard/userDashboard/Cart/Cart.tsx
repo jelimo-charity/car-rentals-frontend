@@ -113,32 +113,40 @@ const Cart: React.FC <bookForm>= ({vehicle}) => {
   return (
     <>
      
-    <div className="p-4 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">Book Vehicle</h2>
+    <div className="p-4 ml-80 mt-10  bg-customBlueDarker max-w-xl rounded-lg shadow-md">
+      <h2 className="text-2xl text-customBlueLight text-center font-semibold mb-4">Book {vehicle.manufacturer} {vehicle.model}</h2>
+      <h2 className="text-2xl text-yellow-500 text-center font-semibold mb-4"> ${vehicle.rental_price}/hour </h2>
+      <figure className="h-40 overflow-hidden">
+                  <img
+                    src={vehicle.image_url}
+                    alt={`${vehicle.manufacturer} ${vehicle.model}`}
+                    className="object-cover h-full w-full"
+                  />
+                </figure>
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">Start Date</label>
+        <label className="block text-customBlue  text-sm font-bold mb-2">Start Date</label>
         <input
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-customBlueDarkest bg-customBlueLight leading-tight focus:outline-none focus:shadow-outline"
         />
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">End Date</label>
+        <label className="block text-customBlue text-sm font-bold mb-2">End Date</label>
         <input
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-customBlueDarkest bg-customBlueLight leading-tight focus:outline-none focus:shadow-outline"
         />
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">Location</label>
+        <label className="block text-customBlue text text-sm font-bold mb-2">Location</label>
         <select
           value={locationId}
           onChange={(e) => setLocationId(Number(e.target.value))}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-customBlueDarkest bg-customBlueLight leading-tight focus:outline-none focus:shadow-outline"
         >
           <option value="">Select a location</option>
           {locations?.map((location: TLocation) => (
@@ -148,21 +156,21 @@ const Cart: React.FC <bookForm>= ({vehicle}) => {
           ))}
         </select>
       </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">Vehicle</label>
-        <div className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      {/* <div className="mb-4">
+        <label className="block text-customBlue text text-sm font-bold mb-2">Vehicle</label>
+        <div className="shadow appearance-none border rounded w-full py-2 px-3 text-yellow-500 leading-tight focus:outline-none focus:shadow-outline">
           {vehicle.manufacturer} {vehicle.model}
         </div>
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">Rental Rate</label>
-        <div className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      </div> */}
+      {/* <div className="mb-4">
+        <label className="block text-customBlue text text-sm font-bold mb-2">Rental Rate</label>
+        <div className="shadow appearance-none border rounded w-full py-2 px-3 text-yellow-500 leading-tight focus:outline-none focus:shadow-outline">
           ${vehicle.rental_price} per day
         </div>
-      </div>
+      </div> */}
       <button
         onClick={handleBooking}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className="bg-customBlue hover:bg-blue-700 text-customBlueDarkest font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         disabled={isLoadingBooking || isPaymentLoading !== null}
       >
         {isLoadingBooking || isPaymentLoading !== null ? (

@@ -11,6 +11,7 @@ import cartSlice from "../features/Cart/cartSlice";
 import { bookingApi } from "../features/Booking/bookingApi";
 import { paymentsApi } from "../features/payments/paymentsAPI";
 import { locationApi } from "../features/locations/locationsAPi";
+import { ticketApi } from "../features/Ticket/ticketAPI";
 
 const persistConfig = {
   key: 'root',
@@ -25,8 +26,7 @@ const rootReducer: Reducer = combineReducers({
   [bookingApi.reducerPath]: bookingApi.reducer,
   [paymentsApi.reducerPath]: paymentsApi.reducer,
   [locationApi.reducerPath]: locationApi.reducer,
-
-
+  [ticketApi.reducerPath]: ticketApi.reducer,
 
 
   cart: cartSlice
@@ -49,7 +49,9 @@ export const store = configureStore({
       usersApi.middleware,
       bookingApi.middleware,
       paymentsApi.middleware,
-      locationApi.middleware
+      locationApi.middleware,
+      ticketApi.middleware
+
     ),
 });
 

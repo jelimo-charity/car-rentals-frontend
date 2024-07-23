@@ -6,7 +6,7 @@ const PaymentSuccess = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-blue-50">
             <div className="flex items-center mb-4">
                 <ArrowLeftToLine className="h-6 w-6 text-blue-500" />
-                <Link to="/userdash/booking" className="text-blue-500 ml-2 hover:underline">Back to Dashboard</Link>
+                <Link to="/userdash/booking" className="text-blue-500 ml-2 hover:underline">Back to dashboard</Link>
             </div>
             <div className="bg-white p-10 rounded-lg shadow-xl text-center">
                 <svg

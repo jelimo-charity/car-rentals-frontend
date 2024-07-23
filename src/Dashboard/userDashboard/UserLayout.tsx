@@ -1,10 +1,9 @@
 
 import { Outlet, Link } from 'react-router-dom';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import AssessmentIcon from '@mui/icons-material/Assessment';
 import Logout from './Logout';
+import { AccountBox, HistoryEdu } from '@mui/icons-material';
 
 
  const UserLayout = () => {
@@ -24,23 +23,29 @@ import Logout from './Logout';
       <List>
         <ListItem button component={Link} to="/userdash" className="hover:bg-blue-700 text-white font-bold">
           <ListItemIcon>
-            <DashboardIcon style={{ color: 'white' }} />
+            <DirectionsCarIcon style={{ color: 'white' }} />
           </ListItemIcon>
           <ListItemText primary="Speedy Cars" className='text-white font-bold text-3xl'/>
         </ListItem>
         <ListItem button component={Link} to="/userdash/booking" className="hover:bg-blue-700 text-white font-bold">
           <ListItemIcon>
-            <DirectionsCarIcon style={{ color: 'white' }} />
+            <HistoryEdu style={{ color: 'white' }} />
           </ListItemIcon>
           <ListItemText primary="Booking History" className='text-white font-bold text-3xl'/>
         </ListItem>
         
         <ListItem button component={Link} to="/userdash/profile" className="hover:bg-blue-700 text-bold">
           <ListItemIcon>
-            <AssessmentIcon style={{ color: 'white' }} />
+            <AccountBox style={{ color: 'white' }} />
           </ListItemIcon>
           <ListItemText primary="Profile" className="text-white font-bold text-3xl" />
         </ListItem>
+        {/* <ListItem button component={Link} to="/userdash/contact" className="hover:bg-blue-700 text-bold">
+          <ListItemIcon>
+            <AssessmentIcon style={{ color: 'white' }} />
+          </ListItemIcon>
+          <ListItemText primary="Contact" className="text-white font-bold text-3xl" />
+        </ListItem> */}
        <Logout />
         
       </List>
