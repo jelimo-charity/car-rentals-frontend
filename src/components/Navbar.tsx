@@ -8,7 +8,7 @@ const Navbar = () => {
   console.log(auth)
   return (
     <>
- <div className="navbar  bg-customBlueDarkest flex justify-between">
+ <div className="navbar  bg-customBlueDarkest flex justify-between ">
   <div className="flex-1 ml-16">
     <a className="btn btn-ghost text-xl">Speedy Cars</a>
   </div>

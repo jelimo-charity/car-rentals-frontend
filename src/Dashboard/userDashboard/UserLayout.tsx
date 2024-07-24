@@ -13,7 +13,7 @@ import { AccountBox, HistoryEdu, Home } from '@mui/icons-material';
    
 
   return (
-    <div className="flex">
+    <div className="flex flex-col">
     <Drawer
       variant="permanent"
       anchor="left"

@@ -1,117 +1,94 @@
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Typography, Card, CardContent, TextField, Button, CircularProgress } from '@mui/material';
+import { toast } from 'react-toastify';
+import { ticketApi } from '../../features/Ticket/ticketAPI';
+import { RootState } from '../../app/store';
 
+interface TicketFormData {
+  subject: string;
+  description: string;
+}
 
+const TicketForm: React.FC = () => {
+  const [formData, setFormData] = useState<TicketFormData>({
+    subject: '',
+    description: '',
+  });
 
+  const user = useSelector((state: RootState) => state.auth.user);
+  const user_id = user? user.id : null;
+  
 
+  const [addTicket, { isLoading: isCreating }] = ticketApi.useAddTicketMutation();
 
-const CreateTicketForm: React.FC = () => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
+  console.log('User:', user);
+  console.log('User ID:', user_id);
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      await addTicket({
+        user_id: user_id,
+        subject: formData.subject,
+        description: formData.description,
+        
+      }).unwrap();
+      setFormData({
+        subject: '',
+        description: '',
+      });
+      toast.success('Ticket created successfully');
+    } catch (error) {
+      console.error('Failed to create ticket:', error);
+      toast.error('Failed to create ticket');
+    }
+  };
 
   return (
-    <div className="p-4">
-      {/* <Typography variant="h4" gutterBottom>Manage Locations</Typography>
-      <Card className="mb-4">
-        <CardContent>
-          <Typography variant="h6">Add New Location</Typography>
-          <form className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={handleSubmit}>
-            <TextField
-              label="Name"
-              variant="outlined"
-              fullWidth
-              name="name"
-              value={formData.name}
-              onChange={(e) => handleChange(e)}
-            />
-            <TextField
-              label="Address"
-              variant="outlined"
-              fullWidth
-              name="address"
-              value={formData.address}
-              onChange={(e) => handleChange(e)}
-            />
-            <TextField
-              label="Contact Phone"
-              variant="outlined"
-              fullWidth
-              name="contact_phone"
-              value={formData.contact_phone}
-              onChange={(e) => handleChange(e)}
-            />
-            <Button
-              variant="contained"
-              className="mt-4 sm:col-span-2"
-              type="submit"
-              disabled={isCreating}
-            >
-              {isCreating ? <CircularProgress size={24} /> : 'Add Location'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      {isFetching ? (
-        <CircularProgress />
-      ) : error ? (
-        <div>Error loading locations</div>
-      ) : (
-        locations && (
-          <div>
-            {locations.map((location: TLocation) => (
-              <Card key={location.id} className="mb-4">
-                <CardContent>
-                  <Typography variant="h6">{location.name}</Typography>
-                  <Typography>Address: {location.address}</Typography>
-                  <Typography>Contact Phone: {location.contact_phone}</Typography>
-                  <Button variant="contained" color="primary" className="mr-2" onClick={() => handleEdit(location.id!)}>Edit</Button>
-                  <Button variant="contained" color="secondary" onClick={() => handleDelete(location.id!)}>Delete</Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )
-      )}
-
-      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <Box className="p-4 bg-white">
-          <Typography variant="h6">Edit Location</Typography>
-          <form className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
-            <TextField
-              label="Name"
-              variant="outlined"
-              fullWidth
-              name="name"
-              value={editFormData.name}
-              onChange={(e) => handleChange(e, true)}
-            />
-            <TextField
-              label="Address"
-              variant="outlined"
-              fullWidth
-              name="address"
-              value={editFormData.address}
-              onChange={(e) => handleChange(e, true)}
-            />
-            <TextField
-              label="Contact Phone"
-              variant="outlined"
-              fullWidth
-              name="contact_phone"
-              value={editFormData.contact_phone}
-              onChange={(e) => handleChange(e, true)}
-            />
-            <Button
-              variant="contained"
-              className="mt-4 sm:col-span-2"
-              type="submit"
-            >
-              Update Location
-            </Button>
-          </form>
-        </Box>
-      </Modal> */}
-    </div>
+    <Card className="p-4">
+      <CardContent>
+        <Typography variant="h4" gutterBottom>
+          Contact Us
+        </Typography>
+        <form className="mt-4 grid grid-cols-1 gap-4" onSubmit={handleSubmit}>
+          <TextField
+            label="Subject"
+            variant="outlined"
+            fullWidth
+            name="subject"
+            value={formData.subject}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            label="Description"
+            variant="outlined"
+            fullWidth
+            multiline
+            rows={4}
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+          />
+          <Button
+            variant="contained"
+            type="submit"
+            disabled={isCreating}
+          >
+            {isCreating ? <CircularProgress size={24} /> : 'Submit'}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 
-export default CreateTicketForm;
+export default TicketForm;
