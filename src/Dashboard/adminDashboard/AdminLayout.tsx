@@ -4,7 +4,7 @@ import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/materia
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import PeopleIcon from '@mui/icons-material/People';
-import AssessmentIcon from '@mui/icons-material/Assessment';
+import { AddLocation, Home } from '@mui/icons-material';
 
 
  const AdminLayout = () => {
@@ -43,9 +43,15 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
        
         <ListItem button component={Link} to="/admindash/locations" className="hover:bg-blue-700 text-bold">
           <ListItemIcon>
-            <AssessmentIcon style={{ color: 'white' }} />
+            <AddLocation style={{ color: 'white' }} />
           </ListItemIcon>
           <ListItemText primary="Manage Location" className="text-white font-bold text-3xl" />
+        </ListItem>
+        <ListItem button component={Link} to="/" className="hover:bg-blue-700 text-bold">
+          <ListItemIcon>
+            <Home style={{ color: 'white' }} />
+          </ListItemIcon>
+          <ListItemText primary="Home" className="text-white font-bold text-3xl" />
         </ListItem>
         
       </List>

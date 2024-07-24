@@ -3,7 +3,7 @@ import { Outlet, Link } from 'react-router-dom';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import Logout from './Logout';
-import { AccountBox, HistoryEdu } from '@mui/icons-material';
+import { AccountBox, HistoryEdu, Home } from '@mui/icons-material';
 
 
  const UserLayout = () => {
@@ -39,6 +39,12 @@ import { AccountBox, HistoryEdu } from '@mui/icons-material';
             <AccountBox style={{ color: 'white' }} />
           </ListItemIcon>
           <ListItemText primary="Profile" className="text-white font-bold text-3xl" />
+        </ListItem>
+        <ListItem button component={Link} to="/" className="hover:bg-blue-700 text-bold">
+          <ListItemIcon>
+            <Home style={{ color: 'white' }} />
+          </ListItemIcon>
+          <ListItemText primary="Home" className="text-white font-bold text-3xl" />
         </ListItem>
         {/* <ListItem button component={Link} to="/userdash/contact" className="hover:bg-blue-700 text-bold">
           <ListItemIcon>
