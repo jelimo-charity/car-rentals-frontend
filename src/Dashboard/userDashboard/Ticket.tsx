@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Typography, Card, CardContent, TextField, Button, CircularProgress } from '@mui/material';
 import { toast } from 'react-toastify';
 import { ticketApi } from '../../features/Ticket/ticketAPI';
 import { RootState } from '../../app/store';
+import './TicketForm.css'; // Import the CSS file for custom styles
+import { CircularProgress } from '@mui/material';
+import contactsvg from '../../assets/contact.svg';
 
 interface TicketFormData {
   subject: string;
@@ -17,8 +19,7 @@ const TicketForm: React.FC = () => {
   });
 
   const user = useSelector((state: RootState) => state.auth.user);
-  const user_id = user? user.id : null;
-  
+  const user_id = user ? user.id : null;
 
   const [addTicket, { isLoading: isCreating }] = ticketApi.useAddTicketMutation();
 
@@ -38,7 +39,6 @@ const TicketForm: React.FC = () => {
         user_id: user_id,
         subject: formData.subject,
         description: formData.description,
-        
       }).unwrap();
       setFormData({
         subject: '',
@@ -52,42 +52,48 @@ const TicketForm: React.FC = () => {
   };
 
   return (
-    <Card className="p-4">
-      <CardContent>
-        <Typography variant="h4" gutterBottom>
-          Contact Us
-        </Typography>
-        <form className="mt-4 grid grid-cols-1 gap-4" onSubmit={handleSubmit}>
-          <TextField
-            label="Subject"
-            variant="outlined"
-            fullWidth
-            name="subject"
-            value={formData.subject}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            label="Description"
-            variant="outlined"
-            fullWidth
-            multiline
-            rows={4}
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-          />
-          <Button
-            variant="contained"
-            type="submit"
-            disabled={isCreating}
-          >
-            {isCreating ? <CircularProgress size={24} /> : 'Submit'}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+    <div className="background-container flex justify-center items-center h-screen">
+      <div className="card max-w-4xl shadow-2xl bg-white flex flex-row items-center p-6 rounded-lg">
+        <figure className="w-1/2 p-4">
+          <img src={contactsvg} alt="Contact Us" className="w-full h-auto rounded-lg shadow-lg" />
+        </figure>
+        <div className="card-body w-1/2 p-6 bg-customBlueDarker rounded">
+          <h2 className="card-title text-3xl font-bold mb-4 text-customBlueLight">Contact Us</h2>
+          <form className="form-control" onSubmit={handleSubmit}>
+            <div className="form-control mb-4">
+              <label className="label text-lg text-customBlue">
+                <span className="label-text text-xl text-customBlue">Subject</span>
+              </label>
+              <input
+                type="text"
+                name="subject"
+                className="input bg-customBlueLight text-customBlueDarkest input-bordered p-2 rounded-lg border-gray-300"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-control mb-4">
+              <label className="label text-lg text-customBlue">
+                <span className="label-text text-xl text-customBlue">Description</span>
+              </label>
+              <textarea
+                name="description"
+                className="textarea bg-customBlueLight text-customBlueDarkest textarea-bordered p-2 rounded-lg border-gray-300"
+                value={formData.description}
+                onChange={handleChange}
+                required
+              ></textarea>
+            </div>
+            <div className="form-control mt-6">
+              <button className="btn bg-customBlue text-customBlueDarkest w-full p-3 text-lg rounded-lg" type="submit" disabled={isCreating}>
+                {isCreating ? <CircularProgress size={24} /> : 'Submit'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 };
 
