@@ -23,22 +23,22 @@ const handleDeleteUser = async (user_id: number) => {
   }
 }
   return (
-    <div className="p-4">
-      <Typography variant="h4" className='text-yellow-500' gutterBottom> Users List</Typography>
-      <Card>
-        <CardContent>
+    <div className="p-4 bg-customBlueDarkest">
+      <Typography variant="h4" className='text-customBlue' gutterBottom> Users List</Typography>
+      <Card className='bg-customBlueLight'>
+        <CardContent className='bg-customBlueDarkest'>
           {/* <Typography variant="h6">User List</Typography> */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {usersData.map((user: TUsers) => (
-              <Card key={user.id} className="flex flex-col">
-                <CardContent>  
-                <Typography variant="h6" className="text-customBlueDarker">{user.full_name}</Typography>
-                  <Typography variant="body2" className="text-customBlueDarkest">{user.email}</Typography>
-                  <Typography variant="body2" className="text-customBlueDarkest">{user.contact_phone}</Typography>
-                  <Typography variant="body2" className="text-customBlueDarkest">{user.address}</Typography>
+              <Card key={user.id} className="flex flex-col bg-customBlueLight">
+                <CardContent className='bg-customBlueDarker'>  
+                <Typography variant="h6" className="text-customBlue text-2xl">{user.full_name}</Typography>
+                  <Typography variant="body2" className="text-customBlueLight">{user.email}</Typography>
+                  <Typography variant="body2" className="text-customBlueLight">{user.contact_phone}</Typography>
+                  <Typography variant="body2" className="text-customBlueLight">{user.address}</Typography>
                   {/* <Typography variant="body2" className="text-gray-700">{user.role}</Typography> */}
                   <div className="flex justify-between mt-4">
-                    <Button variant='contained'  className='bg-red-500' onClick={() => handleDeleteUser(user.id)}>Delete</Button>
+                    <Button variant='contained'  color='error' onClick={() => handleDeleteUser(user.id)}>Delete</Button>
                   </div>
                 </CardContent>
               </Card>

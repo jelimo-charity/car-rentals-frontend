@@ -22,7 +22,7 @@ console.log(vehicle)
   }
 
   return (
-    <div>
+    <div className='bg-customBlueDarkest pb-10 pt-10'>
       {vehicle ? (
         <Cart vehicle={vehicle} />
       ) : (

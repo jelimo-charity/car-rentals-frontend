@@ -58,8 +58,9 @@ const Cars: React.FC = () => {
 
   return (
     <div className="p-4 bg-customBlueDarkest">
+      
       <Typography variant="h4" className="text-customBlue flex justify-center items-center" gutterBottom>
-        Explore our Speedy Cars
+        Explore our BlaZe Cars
       </Typography>
      
       <div className="mb-10 p-4 bg-customBlueDark rounded-lg mx-auto max-w-4xl">

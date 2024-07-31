@@ -32,17 +32,17 @@ function App() {
     
     {
       path: '/register',
-      element: <Register />,
+      element: <Layout><Register /></Layout>,
       errorElement: <Error />,
     },
     {
       path: '/login',
-      element: <Login />,
+      element: <Layout><Login /></Layout>,
       errorElement: <Error />,
     },
     {
       path: '/contact',
-      element: <CreateTicketForm />,
+      element: <Layout><CreateTicketForm /></Layout>,
       errorElement: <Error />,
 
     },
@@ -58,14 +58,16 @@ function App() {
     },
     {
       path: '/cars',
-      element: <Cars />,
+      element: <Layout><Cars /></Layout>,
       errorElement: <Error />,
     },
     {
       path: '/parentcomponent/:vehicleId',
       element: (
         <ProtectedRoute>
+          <Layout>
           <ParentComponent />
+          </Layout>
         </ProtectedRoute>
       ),
       errorElement: <Error />,
@@ -74,7 +76,9 @@ function App() {
       path: '/userdash',
       element: (
         <ProtectedRoute>
+       
           <UserLayout />
+          
         </ProtectedRoute>
       ),
       errorElement: <Error />,

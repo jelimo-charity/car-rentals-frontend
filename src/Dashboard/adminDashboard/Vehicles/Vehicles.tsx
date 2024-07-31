@@ -359,65 +359,63 @@ const CarForm: React.FC = () => {
         </CardContent>
       </Card>
 
-      <Typography variant="h6" className="text-customBlueDarker">
+      <Typography variant="h6" className="text-customBlue text-2xl p-2">
         Existing Vehicles
       </Typography>
       {isFetching ? (
         <CircularProgress />
       ) : (
         vehicles?.map((vehicle) => (
-          <Card key={vehicle.id} className="mb-4 max-w-xl  ">
-            <CardContent>
-              <div className="flex flex-col ">
+          <Card key={vehicle.id} className="mb-4 max-w-xl bg-customBlueDarkest flex flex-col ">
+            <CardContent className='bg-customBlueDarker'>
+              {/* <div className="flex flex-col  "> */}
                 <CardMedia
                   component="img"
                   image={vehicle.image_url}
                   alt={`${vehicle.manufacturer} ${vehicle.model}`}
-                  className="w-24 h-28  mr-4"
+                  className="w-24 h-28  "
                 />
-                <div className="flex-1">
-                  <Typography variant="h6" className="text-customBlueDarker">
+                <div className="flex-1 ">
+                  <Typography variant="h6" className="text-customBlue">
                     {vehicle.manufacturer} {vehicle.model}
                   </Typography>
-                  <Typography variant="body1">
+                  <Typography variant="body1"  className="text-customBlueLight">
                     Year: {vehicle.year}, Fuel Type: {vehicle.fuel_type}
                   </Typography>
-                  <Typography variant="body1">
+                  <Typography variant="body1" className="text-customBlueLight">
                     Rental Price: ${vehicle.rental_price}
                   </Typography>
-                  <Typography variant="body1">
+                  <Typography variant="body1" className="text-customBlueLight">
                     Seating Capacity: {vehicle.seating_capacity}
                   </Typography>
-                  <Typography variant="body1">
+                  <Typography variant="body1" className="text-customBlueLight">
                     Features: {vehicle.features}
                   </Typography>
-                  <div className="mt-2">
+                  <div className="mt-2 space-x-3">
                     <Button
                       variant="contained"
-                      color="secondary"
-                      className="mr-2 bg-red-600 text-white"
+                      color='error'
                       onClick={() => handleDelete(vehicle.id)}
                     >
                       Delete
                     </Button>
                     <Button
                       variant="contained"
-                      color="primary"
-                      className="bg-customBlue  text-white"
+                      color='primary'
                       onClick={() => handleEdit(vehicle.id)}
                     >
                       Edit
                     </Button>
                   </div>
                 </div>
-              </div>
+              {/* </div> */}
             </CardContent>
           </Card>
         ))
       )}
 
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <Box className="p-4 bg-white">
+        <Box className="p-4 bg-customBlueDarkest">
           <Typography variant="h6" className="text-customBlueDarker">
             Edit Vehicle
           </Typography>
@@ -504,8 +502,6 @@ const CarForm: React.FC = () => {
             <Button
               type="submit"
               variant="contained"
-              color="primary"
-              className="bg-customBlue text-white"
               onClick={handleUpdate}
               disabled={isCreating}
             >

@@ -22,7 +22,7 @@ const Login = () => {
 
   const onSubmit = async (data: Inputs) => {
     try {
-      const response = await createUser(data).unwrap();
+      const response = await createUser(data).unwrap(); 
       dispatch(setUser(response))
       toast.success('login successful')
       navigate('/')
@@ -44,7 +44,7 @@ const Login = () => {
         onSubmit={handleSubmit(onSubmit)}
         className='card p-8 bg-customBlueDarker shadow-lg w-96 flex flex-col gap-4 rounded-lg'
       >
-        <h4 className='text-center text-3xl font-bold'>{isLoading ? "loading" : "Register"}</h4>
+        <h4 className='text-center text-3xl font-bold text-customBlue'>{isLoading ? "loading" : "Login"}</h4>
         
         <input
           {...register("email", { required: true })}
@@ -63,12 +63,12 @@ const Login = () => {
         {errors.password && <span>This field is required</span>}
         
         <div className='mt-4'>
-          <button type='submit' className='btn btn-primary w-full'>Login</button>
+          <button type='submit' className='btn bg-customBlue text-customBlueDarkest w-full'>Login</button>
         </div>
         
-        <p className='text-center'>
+        <p className='text-center text-customBlueLight'>
           Not a member yet?{' '}
-          <Link to='/register' className='link link-primary'>
+          <Link to='/register' className='link text-customBlue'>
             Register
           </Link>
           {/* <a href="#" className="label-text-alt ml-10 link link-hover">Forgot password?</a> */}

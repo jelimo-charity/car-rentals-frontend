@@ -52,12 +52,12 @@ const TicketForm: React.FC = () => {
   };
 
   return (
-    <div className="background-container flex justify-center items-center h-screen">
-      <div className="card max-w-4xl shadow-2xl bg-white flex flex-row items-center p-6 rounded-lg">
-        <figure className="w-1/2 p-4">
+    <div className="background-container flex justify-center items-center min-h-screen">
+      <div className="card w-full max-w-4xl shadow-2xl bg-white flex flex-col md:flex-row items-center p-6 rounded-lg">
+        <figure className="w-full md:w-1/2 p-4">
           <img src={contactsvg} alt="Contact Us" className="w-full h-auto rounded-lg shadow-lg" />
         </figure>
-        <div className="card-body w-1/2 p-6 bg-customBlueDarker rounded">
+        <div className="card-body w-full md:w-1/2 p-6 bg-customBlueDarker rounded mt-4 md:mt-0">
           <h2 className="card-title text-3xl font-bold mb-4 text-customBlueLight">Contact Us</h2>
           <form className="form-control" onSubmit={handleSubmit}>
             <div className="form-control mb-4">

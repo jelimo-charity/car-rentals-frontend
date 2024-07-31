@@ -37,7 +37,7 @@ const Booking: React.FC = () => {
   return (
     <div className="p-4 bg-customBlueDarkest">
       <Typography variant="h4" className="text-customBlue flex justify-center items-center" gutterBottom>
-        Bookings
+       BlaZe Cars Booked
       </Typography>
       
       

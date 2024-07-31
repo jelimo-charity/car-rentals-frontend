@@ -47,7 +47,7 @@ const Register = () => {
         onSubmit={handleSubmit(onSubmit)}
         className='card p-8 bg-customBlueDarker shadow-lg w-96 flex flex-col gap-4 rounded-lg'
       >
-        <h4 className='text-center text-3xl font-bold'>Register</h4>
+        <h4 className='text-center text-3xl font-bold text-customBlue'>Register</h4>
         
         <input
           {...register("full_name", { required: true })}
@@ -90,12 +90,12 @@ const Register = () => {
         {errors.address && <span>This field is required</span>}
         
         <div className='mt-4'>
-          <button type='submit' className='btn btn-primary w-full' >{isLoading ? "loading" : "Register"}</button>
+          <button type='submit' className='btn bg-customBlue w-full' >{isLoading ? "loading" : "Register"}</button>
         </div>
         
-        <p>
+        <p className='text-customBlueLight'>
           Already a member?{' '}
-          <Link to='/login' className='link link-primary'>
+          <Link to='/login' className='link text-customBlue'>
             Login
           </Link> 
           <a href="#" className="label-text-alt ml-10 link link-hover">Forgot password?</a>

@@ -104,7 +104,7 @@ const LocationForm: React.FC = () => {
 
   return (
     <div className="p-4">
-      <Typography variant="h4" gutterBottom>Manage Locations</Typography>
+      <Typography variant="h4" className='text-customBlue' gutterBottom>Manage Locations</Typography>
       <Card className="mb-4">
         <CardContent>
           <Typography variant="h6">Add New Location</Typography>
@@ -153,13 +153,15 @@ const LocationForm: React.FC = () => {
         locations && (
           <div>
             {locations.map((location: TLocation) => (
-              <Card key={location.id} className="mb-4">
-                <CardContent>
-                  <Typography variant="h6">{location.name}</Typography>
-                  <Typography>Address: {location.address}</Typography>
-                  <Typography>Contact Phone: {location.contact_phone}</Typography>
-                  <Button variant="contained" color="primary" className="mr-2" onClick={() => handleEdit(location.id!)}>Edit</Button>
-                  <Button variant="contained" color="secondary" onClick={() => handleDelete(location.id!)}>Delete</Button>
+              <Card key={location.id} className="mb-4  bg-customBlueDarkest">
+                <CardContent className='bg-customBlueDarkest border-b border-b-customBlue  w-200'>
+                  <Typography variant="h6" className='text-customBlue'>{location.name}</Typography>
+                  <Typography className='text-customBlueLight'>Address: {location.address}</Typography>
+                  <Typography className='text-customBlueLight'>Contact Phone: {location.contact_phone}</Typography>
+                 <div className='space-x-2 mt-3'>
+                 <Button variant="contained" color="primary" className="mr-2" onClick={() => handleEdit(location.id!)}>Edit</Button>
+                 <Button variant="contained" color="error"  onClick={() => handleDelete(location.id!)}>Delete</Button>
+                 </div>
                 </CardContent>
               </Card>
             ))}

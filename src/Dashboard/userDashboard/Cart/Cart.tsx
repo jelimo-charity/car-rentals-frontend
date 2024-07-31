@@ -111,9 +111,9 @@ const Cart: React.FC <bookForm>= ({vehicle}) => {
   };
 
   return (
-    <>
+    <section >
      
-    <div className="p-4 ml-80 mt-10  bg-customBlueDarker max-w-xl rounded-lg shadow-md">
+    <div className="p-4 ml-80   bg-customBlueDarker max-w-xl rounded-lg shadow-md">
       <h2 className="text-2xl text-customBlueLight text-center font-semibold mb-4">Book {vehicle.manufacturer} {vehicle.model}</h2>
       <h2 className="text-2xl text-yellow-500 text-center font-semibold mb-4"> ${vehicle.rental_price}/hour </h2>
       <figure className="h-40 overflow-hidden">
@@ -183,7 +183,7 @@ const Cart: React.FC <bookForm>= ({vehicle}) => {
         )}
       </button>
     </div>
-  </>
+  </section>
   );
 };
 
